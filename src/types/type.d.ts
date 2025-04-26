@@ -13,3 +13,7 @@ interface IMenuItems {
   title: string;
   icon?: React.ReactNode;
 }
+interface ICourseInfo {
+  title: string | number;
+  icon: (classname: string) => React.ReactNode;
+}

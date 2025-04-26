@@ -1,8 +1,11 @@
 import {
+  IconClock,
   IconComment,
   IconCourse,
   IconExplore,
+  IconEye,
   IconOrder,
+  IconStar,
   IconStudy,
   IconUsers,
 } from "@/components/icons";
@@ -43,5 +46,21 @@ export const menuItems: IMenuItems[] = [
     url: "/manage/order",
     title: "Quản lý đơn hàng",
     icon: <IconOrder className="size-5"></IconOrder>,
+  },
+];
+
+export const courseInfo: ICourseInfo[] = [
+  {
+    title: "1000",
+    icon: (classname: string) => <IconClock className={classname}></IconClock>,
+  },
+  {
+    title: 4.5,
+    icon: (classname: string) => <IconStar className={classname}></IconStar>,
+  },
+
+  {
+    title: "1000",
+    icon: (classname: string) => <IconEye className={classname}></IconEye>,
   },
 ];
