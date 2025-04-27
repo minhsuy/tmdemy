@@ -1,9 +1,7 @@
 import { IconHome } from "@/components/icons";
-import { connectToDatabase } from "@/lib/mongoose";
 import Link from "next/link";
 
 const PageNotFound = () => {
-  connectToDatabase();
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="font-bold text-7xl">404</h1>
