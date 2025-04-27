@@ -3,6 +3,7 @@ import Link from "next/link";
 import { menuItems } from "@/constants";
 import { ActiveLink } from "../common";
 import { UserButton } from "@clerk/nextjs";
+import { IMenuItem } from "@/types/type";
 
 const Sidebar = () => {
   return (

@@ -1,3 +1,6 @@
+import { Document } from "mongoose";
+import { EUserRole, EUserStatus } from "./enums";
+
 interface IActiveLink {
   url: string;
   children: React.ReactNode;
@@ -17,3 +20,15 @@ interface ICourseInfo {
   title: string | number;
   icon: (classname: string) => React.ReactNode;
 }
+
+interface IUser extends Document {
+  clerkId: string;
+  name: string;
+  username: string;
+  email_address: string;
+  avatar: string;
+  course: mongoose.Types.ObjectId[];
+  role: EUserRole;
+  status: EUserStatus;
+}
+export { IActiveLink, IMenuItem, IMenuItems, ICourseInfo, IUser };
