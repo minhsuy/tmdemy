@@ -7,6 +7,9 @@ const config: Config = {
     extend: {
       colors: {
         primary: "#FD617D",
+        grayDarkest: "#131316",
+        grayDarker: "#212126",
+        grayDark: "#9394A1",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
