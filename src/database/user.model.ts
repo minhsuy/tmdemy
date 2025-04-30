@@ -1,6 +1,6 @@
 import { EUserRole, EUserStatus } from "@/types/enums";
 import { IUser } from "@/types/type";
-import mongoose from "mongoose";
+import mongoose, { models } from "mongoose";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -12,10 +12,13 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     username: {
       type: String,
+      unique: true,
+      required: true,
     },
     email_address: {
       type: String,
       unique: true,
+      required: true,
     },
     avatar: {
       type: String,
@@ -40,6 +43,6 @@ const userSchema = new mongoose.Schema<IUser>(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = models.User || mongoose.model("User", userSchema);
 
 export default User;

@@ -10,12 +10,6 @@ interface IMenuItem {
   url: string;
   title: string;
 }
-interface IMenuItems {
-  id: number;
-  url: string;
-  title: string;
-  icon?: React.ReactNode;
-}
 interface ICourseInfo {
   title: string | number;
   icon: (classname: string) => React.ReactNode;
@@ -31,4 +25,11 @@ interface IUser extends Document {
   role: EUserRole;
   status: EUserStatus;
 }
-export { IActiveLink, IMenuItem, IMenuItems, ICourseInfo, IUser };
+interface ICreateUser {
+  clerkId: string;
+  name?: string;
+  username: string;
+  email_address: string;
+  avatar?: string;
+}
+export { IActiveLink, IMenuItem, IMenuItems, ICourseInfo, IUser, ICreateUser };

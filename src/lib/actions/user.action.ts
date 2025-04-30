@@ -1,9 +1,9 @@
 "use server";
 import User from "@/database/user.model";
-import { IUser } from "@/types/type";
+import { ICreateUser } from "@/types/type";
 import { connectToDatabase } from "../mongoose";
 
-const createUser = async (params: IUser) => {
+const createUser = async (params: ICreateUser): Promise<any> => {
   if (Object.keys(params).length === 0) {
     throw new Error("User data is required");
   }
