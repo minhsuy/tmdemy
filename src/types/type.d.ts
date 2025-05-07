@@ -35,7 +35,7 @@ interface ICreateUser {
   clerkId: string;
   name?: string;
   username: string;
-  email_address: string;
+  email: string;
   avatar?: string;
 }
 export { IActiveLink, IMenuItem, IMenuItems, ICourseInfo, IUser, ICreateUser };
