@@ -25,7 +25,7 @@ interface IUser extends Document {
   clerkId: string;
   name: string;
   username: string;
-  email_address: string;
+  email: string;
   avatar: string;
   course: mongoose.Types.ObjectId[];
   role: EUserRole;

@@ -10,15 +10,3 @@ export const config = {
     "/(api|trpc)(.*)",
   ],
 };
-
-// import { clerkMiddleware } from "@clerk/nextjs/server";
-
-// const isDev = process.env.NODE_ENV === "development";
-
-// export default isDev
-//   ? () => {} // noop middleware
-//   : clerkMiddleware();
-
-// export const config = {
-//   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)", "/(api|trpc)(.*)"],
-// };
