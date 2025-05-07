@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema<IUser>(
     avatar: {
       type: String,
     },
-    course: [
+    courses: [
       {
         type: mongoose.Types.ObjectId,
         ref: "Course",
