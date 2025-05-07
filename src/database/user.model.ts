@@ -1,6 +1,6 @@
 import { EUserRole, EUserStatus } from "@/types/enums";
 import { IUser } from "@/types/type";
-import mongoose, { models } from "mongoose";
+import mongoose, { Document, models } from "mongoose";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
