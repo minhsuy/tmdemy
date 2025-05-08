@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import Link from "next/link";
 import { menuItems } from "@/constants";
 import { ActiveLink } from "../common";
@@ -8,6 +8,7 @@ import { ModeToggle } from "../common/ModeToggle";
 import { createUser } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs/server";
 import { IconUsers } from "../icons";
+import IconUser from "../icons/IconUser";
 
 const Sidebar = async () => {
   const { userId } = await auth();
@@ -32,7 +33,7 @@ const Sidebar = async () => {
         <ModeToggle></ModeToggle>
         {!userId ? (
           <Link href={"/sign-in"}>
-            <IconUsers className="size-9  p-1 rounded-lg bg-primary text-white"></IconUsers>{" "}
+            <IconUser className="size-9  p-1 rounded-md bg-primary text-white"></IconUser>{" "}
           </Link>
         ) : (
           <UserButton />

@@ -2,6 +2,7 @@
 import User from "@/database/user.model";
 import { ICreateUser } from "@/types/type";
 import { connectToDatabase } from "../mongoose";
+import { NextResponse } from "next/server";
 
 const createUser = async (params: ICreateUser): Promise<any> => {
   if (Object.keys(params).length === 0) {
@@ -16,4 +17,25 @@ const createUser = async (params: ICreateUser): Promise<any> => {
   }
 };
 
-export { createUser };
+const getUserInfo = async ({ userId }: { userId: string }): Promise<any> => {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+  try {
+    connectToDatabase();
+    const user = await User.findOne({ clerkId: userId });
+    if (!user) {
+      return NextResponse.json({
+        message: "User not found",
+      });
+    }
+    return user;
+  } catch (error) {
+    return NextResponse.json({
+      message: "Something went wrong",
+      error,
+    });
+  }
+};
+
+export { createUser, getUserInfo };
