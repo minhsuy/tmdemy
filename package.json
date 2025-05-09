@@ -23,6 +23,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.56.3",
+    "react-toastify": "^11.0.5",
     "sharp": "^0.34.1",
     "slugify": "^1.6.6",
     "svix": "^1.64.1",

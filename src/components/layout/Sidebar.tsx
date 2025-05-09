@@ -33,7 +33,10 @@ const Sidebar = async () => {
         <ModeToggle></ModeToggle>
         {!userId ? (
           <Link href={"/sign-in"}>
-            <IconUser className="size-9  p-1 rounded-md bg-primary text-white"></IconUser>{" "}
+            <div className="flex items-center gap-2 bg-primary text-white rounded-md py-2 px-4">
+              <IconUser className="size-7 bg-primary text-white"></IconUser>
+              <span>Đăng nhập</span>
+            </div>
           </Link>
         ) : (
           <UserButton />

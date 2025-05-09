@@ -38,4 +38,17 @@ interface ICreateUser {
   email: string;
   avatar?: string;
 }
-export { IActiveLink, IMenuItem, IMenuItems, ICourseInfo, IUser, ICreateUser };
+
+interface ICreateCourseParams {
+  title: string;
+  slug: string;
+}
+export {
+  IActiveLink,
+  IMenuItem,
+  IMenuItems,
+  ICourseInfo,
+  IUser,
+  ICreateUser,
+  ICreateCourseParams,
+};

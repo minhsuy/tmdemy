@@ -16,6 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { createCourse } from "@/lib/actions/course.actions";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   title: z.string().min(10, {
@@ -25,6 +28,7 @@ const formSchema = z.object({
 });
 
 function CourseAddNew() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,7 +38,7 @@ function CourseAddNew() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
       const data = {
@@ -46,14 +50,17 @@ function CourseAddNew() {
             locale: "vi",
           }),
       };
-      console.log(data);
+      const course = await createCourse(data);
+      if (course.success && course.data) {
+        toast.success("Tạo khóa học thành công !");
+        router.push(`/manage/course/update?slug=${course.data.slug}`);
+      }
     } catch (error) {
       setIsLoading(false);
       console.error("Error creating course:", error);
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 5000);
+      setIsLoading(false);
+      form.reset();
     }
   };
 
@@ -67,7 +74,9 @@ function CourseAddNew() {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tên khóa học *</FormLabel>
+                <FormLabel>
+                  Tên khóa học <span className="text-primary">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Tên khóa học" {...field} />
                 </FormControl>

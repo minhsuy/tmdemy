@@ -38,18 +38,23 @@ const courseSchema = new mongoose.Schema<ICourse>(
     },
     image: {
       type: String,
+      default: "",
     },
     intro_url: {
       type: String,
+      default: "",
     },
     description: {
       type: String,
+      default: "",
     },
     price: {
       type: Number,
+      default: 0,
     },
     sale_price: {
       type: Number,
+      default: 0,
     },
     status: {
       type: String,
