@@ -1,7 +1,14 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
-const Heading = ({ children }: { children: React.ReactNode }) => {
-  return <h1 className="text-3xl font-bold">{children}</h1>;
+const Heading = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return <h1 className={cn("text-3xl font-bold", className)}>{children}</h1>;
 };
 
 export default Heading;

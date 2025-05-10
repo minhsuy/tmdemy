@@ -19,6 +19,7 @@ import { useState } from "react";
 import { createCourse } from "@/lib/actions/course.actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/types/type";
 
 const formSchema = z.object({
   title: z.string().min(10, {
@@ -27,7 +28,7 @@ const formSchema = z.object({
   slug: z.string().optional(),
 });
 
-function CourseAddNew() {
+function CourseAddNew({ user }: { user: IUser }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,18 +50,21 @@ function CourseAddNew() {
             lower: true,
             locale: "vi",
           }),
+        author: user._id,
       };
       const course = await createCourse(data);
       if (course.success && course.data) {
         toast.success("Tạo khóa học thành công !");
         router.push(`/manage/course/update?slug=${course.data.slug}`);
+        form.reset();
+      } else {
+        toast.error(course.message);
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Error creating course:", error);
     } finally {
       setIsLoading(false);
-      form.reset();
     }
   };
 

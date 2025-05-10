@@ -5,7 +5,7 @@ import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
 import Course from "@/database/course.model";
 
-const getCourseBySlug = async (slug: string) => {
+const getCourseBySlug = async ({ slug }: { slug: string }) => {
   if (!slug) {
     throw new Error("Slug is required");
   }
@@ -27,6 +27,14 @@ const createCourse = async (params: ICreateCourseParams): Promise<any> => {
   }
   try {
     connectToDatabase();
+    const checkExistCourse = await Course.findOne({ slug: params.slug });
+    if (checkExistCourse) {
+      return {
+        success: false,
+        message:
+          "Khóa học đã tồn tại , vui lòng tạo 1 khóa học khác hoặc đổi đường dẫn !",
+      };
+    }
     const course = await Course.create(params);
     return {
       success: true,
@@ -37,4 +45,4 @@ const createCourse = async (params: ICreateCourseParams): Promise<any> => {
   }
 };
 
-export { createCourse };
+export { createCourse, getCourseBySlug };

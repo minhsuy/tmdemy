@@ -29,7 +29,7 @@ const getUserInfo = async ({ userId }: { userId: string }): Promise<any> => {
         message: "User not found",
       });
     }
-    return user;
+    return JSON.parse(JSON.stringify(user));
   } catch (error) {
     return NextResponse.json({
       message: "Something went wrong",
