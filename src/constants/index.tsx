@@ -9,7 +9,7 @@ import {
   IconStudy,
   IconUsers,
 } from "@/components/icons";
-import { ICourseInfo, IMenuItems } from "@/types/type";
+import { ICourseInfo, ICourseInfo2, IMenuItems } from "@/types/type";
 
 export const menuItems: IMenuItems[] = [
   {
@@ -50,13 +50,13 @@ export const menuItems: IMenuItems[] = [
   },
 ];
 
-export const courseInfo: ICourseInfo[] = [
+export const courseInfo = (data: any) => [
   {
-    title: "1000",
+    title: data.views,
     icon: (classname: string) => <IconClock className={classname}></IconClock>,
   },
   {
-    title: 4.5,
+    title: data.rating[0],
     icon: (classname: string) => <IconStar className={classname}></IconStar>,
   },
 

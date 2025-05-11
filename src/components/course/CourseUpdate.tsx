@@ -16,12 +16,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { createCourse } from "@/lib/actions/course.actions";
+import { createCourse, updateCourse } from "@/lib/actions/course.actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types/type";
 import { ECourseLevel, ECourseStatus } from "@/types/enums";
 import { Textarea } from "../ui/textarea";
+import { ICourse } from "@/database/course.model";
 
 const formSchema = z.object({
   title: z.string().min(10, {
@@ -56,32 +57,55 @@ const formSchema = z.object({
   }),
 });
 
-function CourseUpdate() {
+function CourseUpdate({ data }: { data: ICourse }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      slug: "",
-      price: 0,
-      sale_price: 0,
-      intro_url: "",
-      description: "",
-      // image: "",
-      views: 0,
-      status: ECourseStatus.PENDING,
-      level: ECourseLevel.BEGINNER,
+      title: data.title,
+      slug: data.slug,
+      price: data.price,
+      sale_price: data.sale_price,
+      intro_url: data.intro_url,
+      description: data.description,
+      image: data.image,
+      views: data.views,
+      status: data.status,
+      level: data.level,
       info: {
-        requirements: [],
-        benefits: [],
-        qa: [],
+        requirements: data.info.requirements,
+        benefits: data.info.benefits,
+        qa: data.info.qa,
       },
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+    try {
+      const updatedCourse = await updateCourse({
+        slug: data.slug,
+        updateData: {
+          title: values.title,
+          slug: values.slug,
+          price: values.price,
+          sale_price: values.sale_price,
+          intro_url: values.intro_url,
+          description: values.description,
+          views: values.views,
+        },
+      });
+      if (updatedCourse.success) {
+        toast.success("Cập nhật khóa học thành công!");
+        router.push(`/manage/course/update?slug=${updatedCourse.data.slug}`);
+      } else {
+        toast.error(updatedCourse.message);
+      }
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -126,7 +150,12 @@ function CourseUpdate() {
               <FormItem>
                 <FormLabel>Giá khuyến mãi</FormLabel>
                 <FormControl>
-                  <Input placeholder="599.000" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="599.000"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,7 +169,12 @@ function CourseUpdate() {
               <FormItem>
                 <FormLabel>Giá gốc</FormLabel>
                 <FormControl>
-                  <Input placeholder="999.000" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="999.000"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -203,7 +237,12 @@ function CourseUpdate() {
               <FormItem>
                 <FormLabel>Lượt xem</FormLabel>
                 <FormControl>
-                  <Input placeholder="1000" type="number" {...field} />
+                  <Input
+                    placeholder="1000"
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

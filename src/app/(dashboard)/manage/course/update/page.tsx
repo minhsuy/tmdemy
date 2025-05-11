@@ -1,3 +1,4 @@
+import PageNotFound from "@/app/not-found";
 import CourseUpdate from "@/components/course/CourseUpdate";
 import Heading from "@/components/typography/Heading";
 import { getCourseBySlug } from "@/lib/actions/course.actions";
@@ -13,15 +14,14 @@ const page = async ({
 }) => {
   const { slug } = searchParams;
   const findCourse = await getCourseBySlug({ slug });
-  if (findCourse && findCourse.success) {
-    console.log(findCourse);
-  } else {
-    return null;
-  }
+  if (!findCourse.data) return <PageNotFound></PageNotFound>;
+
   return (
     <div>
       <Heading>Cập nhật khóa học</Heading>
-      <CourseUpdate></CourseUpdate>
+      <CourseUpdate
+        data={JSON.parse(JSON.stringify(findCourse.data))}
+      ></CourseUpdate>
     </div>
   );
 };

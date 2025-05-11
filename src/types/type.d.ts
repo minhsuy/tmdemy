@@ -1,5 +1,6 @@
 import { Document } from "mongoose";
 import { EUserRole, EUserStatus } from "./enums";
+import { ICourse } from "@/database/course.model";
 
 interface IActiveLink {
   url: string;
@@ -43,6 +44,11 @@ interface ICreateCourseParams {
   title: string;
   slug: string;
 }
+interface IUpdateCourse {
+  slug: string;
+  updateData: Partial<ICourse>;
+}
+
 export {
   IActiveLink,
   IMenuItem,
@@ -51,4 +57,5 @@ export {
   IUser,
   ICreateUser,
   ICreateCourseParams,
+  IUpdateCourse,
 };

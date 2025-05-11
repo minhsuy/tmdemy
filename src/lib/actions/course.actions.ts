@@ -1,11 +1,12 @@
 "use server";
 
-import { ICreateCourseParams } from "@/types/type";
+import { ICreateCourseParams, IUpdateCourse } from "@/types/type";
 import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
-import Course from "@/database/course.model";
+import Course, { ICourse } from "@/database/course.model";
+import { revalidatePath } from "next/cache";
 
-const getCourseBySlug = async ({ slug }: { slug: string }) => {
+const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   if (!slug) {
     throw new Error("Slug is required");
   }
@@ -16,6 +17,16 @@ const getCourseBySlug = async ({ slug }: { slug: string }) => {
       success: true,
       data: JSON.parse(JSON.stringify(findCourse)),
     };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCourses = async (): Promise<any> => {
+  try {
+    connectToDatabase();
+    const courses = await Course.find();
+    return courses;
   } catch (error) {
     console.log(error);
   }
@@ -45,4 +56,37 @@ const createCourse = async (params: ICreateCourseParams): Promise<any> => {
   }
 };
 
-export { createCourse, getCourseBySlug };
+const updateCourse = async (params: IUpdateCourse): Promise<any> => {
+  if (!params.slug) {
+    throw new Error("Slug is required");
+  }
+  try {
+    connectToDatabase();
+    const checkCourseExisting = await Course.findOne({ slug: params.slug });
+    if (!checkCourseExisting) {
+      return {
+        success: false,
+        message: "Khóa học không tồn tại !",
+      };
+    }
+    const updatedCourse = await Course.findOneAndUpdate(
+      { slug: params.slug },
+      params.updateData,
+      { new: true }
+    );
+    if (!updatedCourse) {
+      return {
+        success: false,
+        message: "Không thể updated khóa học !",
+      };
+    }
+    revalidatePath("/");
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(updatedCourse)),
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+export { createCourse, getCourseBySlug, getCourses, updateCourse };
