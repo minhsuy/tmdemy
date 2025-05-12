@@ -9,7 +9,7 @@ import {
   IconStudy,
   IconUsers,
 } from "@/components/icons";
-import { ICourseInfo, ICourseInfo2, IMenuItems } from "@/types/type";
+import { ICourseInfo, IMenuItems } from "@/types/type";
 
 export const menuItems: IMenuItems[] = [
   {
