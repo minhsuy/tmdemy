@@ -61,6 +61,11 @@ const courseSchema = new mongoose.Schema<ICourse>(
       enum: Object.values(ECourseStatus),
       default: ECourseStatus.PENDING,
     },
+    level: {
+      type: String,
+      enum: Object.values(ECourseLevel),
+      default: ECourseLevel.BEGINNER,
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

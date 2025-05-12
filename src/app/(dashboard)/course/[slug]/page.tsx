@@ -1,5 +1,6 @@
 import PageNotFound from "@/app/not-found";
 import { IconClock, IconPlay, IconStudy, IconUsers } from "@/components/icons";
+import IconAdd from "@/components/icons/IconAdd";
 import { Button } from "@/components/ui/button";
 import { ICourse } from "@/database/course.model";
 import { getCourseBySlug } from "@/lib/actions/course.actions";
@@ -17,16 +18,29 @@ const page = async ({
   const course = await getCourseBySlug({ slug: params.slug });
   if (!course?.data) return <PageNotFound></PageNotFound>;
   const { data }: { data: ICourse } = course;
+  const ytb_url = data?.intro_url?.split("v=")[1];
+
   return (
     <div className="grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen">
       <div>
         <div className="relative aspect-video mb-5">
-          <Image
-            src="https://images.unsplash.com/photo-1716881763995-097b7a68ea3d?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt=""
-            fill
-            className="w-full h-full object-cover rounded-lg"
-          />
+          {data?.intro_url ? (
+            <iframe
+              width="976"
+              height="549"
+              src={`https://www.youtube.com/embed/${ytb_url}`}
+              title={data?.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              className="w-full h-full object-cover rounded-lg"
+            ></iframe>
+          ) : (
+            <Image
+              src="https://images.unsplash.com/photo-1716881763995-097b7a68ea3d?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt=""
+              fill
+              className="w-full h-full object-cover rounded-lg"
+            />
+          )}
         </div>
         <h1 className="font-bold text-3xl mb-5">{data?.title}</h1>
         <BoxSection title="Mô tả">
@@ -43,13 +57,19 @@ const page = async ({
         <BoxSection title="Yêu cầu">
           {data &&
             data.info.requirements.map((r, index: number) => (
-              <div key={index}>{r}</div>
+              <div key={index} className="flex items-center gap-2">
+                <IconAdd className="size-5 p-1 bg-primary text-white rounded-sm"></IconAdd>
+                <span>{r}</span>
+              </div>
             ))}
         </BoxSection>
         <BoxSection title="Lợi ích">
           {data &&
-            data.info.requirements.map((r, index: any) => (
-              <div key={index}>{r}</div>
+            data.info.benefits.map((r, index: any) => (
+              <div key={index} className="flex items-center gap-2">
+                <IconAdd className="size-5 p-1 bg-primary text-white rounded-sm"></IconAdd>
+                <span>{r}</span>
+              </div>
             ))}
         </BoxSection>
         <BoxSection title="Q.A">
