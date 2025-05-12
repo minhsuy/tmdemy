@@ -7,11 +7,11 @@ const page = () => {
   return (
     <div>
       <Heading>Khu vực học tập</Heading>
-      <CourseGrid>
+      {/* <CourseGrid>
         <CourseItem></CourseItem>
         <CourseItem></CourseItem>
         <CourseItem></CourseItem>
-      </CourseGrid>
+      </CourseGrid> */}
     </div>
   );
 };
