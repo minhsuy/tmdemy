@@ -58,7 +58,10 @@ const createCourse = async (params: ICreateCourseParams): Promise<any> => {
 
 const updateCourse = async (params: IUpdateCourse): Promise<any> => {
   if (!params.slug) {
-    throw new Error("Slug is required");
+    return {
+      success: false,
+      message: "Khóa học không tồn tại !",
+    };
   }
   try {
     connectToDatabase();
