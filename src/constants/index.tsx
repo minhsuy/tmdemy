@@ -9,6 +9,7 @@ import {
   IconStudy,
   IconUsers,
 } from "@/components/icons";
+import { ECourseLevel, ECourseStatus } from "@/types/enums";
 import { ICourseInfo, IMenuItems } from "@/types/type";
 
 export const menuItems: IMenuItems[] = [
@@ -63,5 +64,41 @@ export const courseInfo = (data: any) => [
   {
     title: "1000",
     icon: (classname: string) => <IconEye className={classname}></IconEye>,
+  },
+];
+
+export const courseLevel: {
+  title: string;
+  value: ECourseLevel;
+}[] = [
+  {
+    title: "Dễ",
+    value: ECourseLevel.BEGINNER,
+  },
+  {
+    title: "Trung bình",
+    value: ECourseLevel.INTERMEDIATE,
+  },
+  {
+    title: "Khó",
+    value: ECourseLevel.ADVANCED,
+  },
+];
+
+export const courseStatus: {
+  title: string;
+  value: ECourseStatus;
+}[] = [
+  {
+    title: "Đã duyệt",
+    value: ECourseStatus.ACTIVE,
+  },
+  {
+    title: "Chờ duyệt",
+    value: ECourseStatus.PENDING,
+  },
+  {
+    title: "Từ chối",
+    value: ECourseStatus.REJECTED,
   },
 ];

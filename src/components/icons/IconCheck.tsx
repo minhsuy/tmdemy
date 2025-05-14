@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
 
-const IconAdd = (props: ComponentProps<"svg">) => {
+const IconCheck = (props: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,10 +13,10 @@ const IconAdd = (props: ComponentProps<"svg">) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M12 4.5v15m7.5-7.5h-15"
+        d="M4.5 12.75l6 6 9-13.5"
       />
     </svg>
   );
 };
 
-export default IconAdd;
+export default IconCheck;

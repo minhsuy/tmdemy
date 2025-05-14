@@ -25,7 +25,16 @@ import { Textarea } from "../ui/textarea";
 import { ICourse } from "@/database/course.model";
 import { useImmer } from "use-immer";
 import IconAdd from "../icons/IconAdd";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { courseLevel, courseStatus } from "@/constants";
+import { UploadButton } from "@/utils/uploadthing";
+import Image from "next/image";
 const formSchema = z.object({
   title: z.string().min(10, {
     message: "Tên khóa học phải có ít nhất 10 ký tự",
@@ -87,7 +96,6 @@ function CourseUpdate({ data }: { data: ICourse }) {
       },
     },
   });
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
@@ -106,6 +114,9 @@ function CourseUpdate({ data }: { data: ICourse }) {
             benefits: courseInfo.benefits,
             qa: courseInfo.qa,
           },
+          level: values.level,
+          status: values.status,
+          image: values.image,
         },
       });
       if (updatedCourse.success) {
@@ -119,10 +130,15 @@ function CourseUpdate({ data }: { data: ICourse }) {
       setIsLoading(false);
     }
   };
+  const watchImage = form.watch("image");
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
-        <div className="grid grid-cols-2 gap-4 mt-10">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 min-h-screen"
+      >
+        <div className="grid grid-cols-2 gap-8 mt-10 mb-20">
           {/* title */}
           <FormField
             control={form.control}
@@ -217,7 +233,27 @@ function CourseUpdate({ data }: { data: ICourse }) {
               <FormItem>
                 <FormLabel>Ảnh đại diện</FormLabel>
                 <FormControl>
-                  <div className="h-[200px] bg-white rounded-md border border-gray-200"></div>
+                  <div className="h-[200px] bg-white rounded-md border border-gray-200 flex items-center justify-center relative">
+                    {watchImage ? (
+                      <Image
+                        src={watchImage}
+                        alt="avatar"
+                        fill
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                          // Do something with the response
+                          form.setValue("image", res[0]?.url);
+                        }}
+                        onUploadError={(error: Error) => {
+                          // Do something with the error.
+                        }}
+                      />
+                    )}
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -259,30 +295,7 @@ function CourseUpdate({ data }: { data: ICourse }) {
               </FormItem>
             )}
           />
-          {/* status */}
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Trạng thái</FormLabel>
-                <FormControl></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* level */}
-          <FormField
-            control={form.control}
-            name="level"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Trình độ</FormLabel>
-                <FormControl></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           {/* required */}
           <FormField
             control={form.control}
@@ -361,7 +374,7 @@ function CourseUpdate({ data }: { data: ICourse }) {
             control={form.control}
             name="info.qa"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="col-start-1 col-end-3">
                 <FormLabel className="flex items-center justify-between gap-5">
                   <span>Question/answer</span>
                   <button
@@ -409,17 +422,71 @@ function CourseUpdate({ data }: { data: ICourse }) {
               </FormItem>
             )}
           />
+          {/* level */}
+          <FormField
+            control={form.control}
+            name="level"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Trình độ</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Trình độ" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {courseLevel.map((level) => (
+                        <SelectItem key={level.value} value={level.value}>
+                          {level.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* level */}
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Trạng thái</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Trạng thái" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {courseStatus.map((status) => (
+                        <SelectItem key={status.value} value={status.value}>
+                          {status.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-        <div className="mt-6">
-          <Button
-            disabled={isLoading}
-            className="text-white w-[150px]"
-            type="submit"
-            isLoading={isLoading}
-          >
-            Cập nhật khóa học
-          </Button>
-        </div>
+        <Button
+          disabled={isLoading}
+          className="text-white w-[150px]"
+          type="submit"
+          isLoading={isLoading}
+        >
+          Cập nhật khóa học
+        </Button>
       </form>
     </Form>
   );
