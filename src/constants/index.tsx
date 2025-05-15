@@ -88,17 +88,21 @@ export const courseLevel: {
 export const courseStatus: {
   title: string;
   value: ECourseStatus;
+  className?: string;
 }[] = [
   {
     title: "Đã duyệt",
     value: ECourseStatus.ACTIVE,
+    className: "bg-green-500 text-white",
   },
   {
     title: "Chờ duyệt",
     value: ECourseStatus.PENDING,
+    className: "bg-yellow-500 text-white",
   },
   {
     title: "Từ chối",
     value: ECourseStatus.REJECTED,
+    className: "bg-red-500 text-white",
   },
 ];

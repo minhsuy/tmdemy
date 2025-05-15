@@ -5,6 +5,7 @@ import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
 import Course, { ICourse } from "@/database/course.model";
 import { revalidatePath } from "next/cache";
+import { ECourseStatus } from "@/types/enums";
 
 const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   if (!slug) {
@@ -92,4 +93,50 @@ const updateCourse = async (params: IUpdateCourse): Promise<any> => {
     console.log(error);
   }
 };
-export { createCourse, getCourseBySlug, getCourses, updateCourse };
+const deleteCourse = async (slug: string, pathname: string): Promise<any> => {
+  try {
+    connectToDatabase();
+    if (!slug) {
+      throw new Error("Slug is required");
+    }
+    const checkCourseExisting = await Course.findOne({ slug: slug });
+    if (!checkCourseExisting) {
+      return {
+        success: false,
+        message: "Khóa học không tồn tại !",
+      };
+    }
+    if (checkCourseExisting._destroy) {
+      return {
+        success: true,
+        deleted: false,
+        message: "Khóa học được xóa  , bạn có muốn khôi phục lại nó không !",
+      };
+    }
+    const deletedCourse = await Course.findOneAndUpdate(
+      { slug: slug },
+      { _destroy: true, status: ECourseStatus.PENDING },
+      { new: true }
+    );
+    if (!deletedCourse) {
+      return {
+        success: false,
+        message: "Không thể xóa khóa học !",
+      };
+    }
+    revalidatePath(pathname || "/");
+    return {
+      success: true,
+      message: "Xóa khóa học thành công !",
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+export {
+  createCourse,
+  getCourseBySlug,
+  getCourses,
+  updateCourse,
+  deleteCourse,
+};

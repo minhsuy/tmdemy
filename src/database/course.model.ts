@@ -15,6 +15,7 @@ export interface ICourse extends Document {
   level: ECourseLevel;
   views: number;
   rating: number[];
+  createdAt?: string;
   info: {
     requirements: string[];
     benefits: string[];

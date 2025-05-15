@@ -35,6 +35,7 @@ import {
 import { courseLevel, courseStatus } from "@/constants";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
+import IconTrash from "../icons/IconTrash";
 const formSchema = z.object({
   title: z.string().min(10, {
     message: "Tên khóa học phải có ít nhất 10 ký tự",
@@ -115,7 +116,6 @@ function CourseUpdate({ data }: { data: ICourse }) {
             qa: courseInfo.qa,
           },
           level: values.level,
-          status: values.status,
           image: values.image,
         },
       });
@@ -235,12 +235,20 @@ function CourseUpdate({ data }: { data: ICourse }) {
                 <FormControl>
                   <div className="h-[200px] bg-white rounded-md border border-gray-200 flex items-center justify-center relative">
                     {watchImage ? (
-                      <Image
-                        src={watchImage}
-                        alt="avatar"
-                        fill
-                        className="w-full h-full object-cover"
-                      />
+                      <div>
+                        <Image
+                          src={watchImage}
+                          alt="avatar"
+                          fill
+                          className="w-full h-full object-cover"
+                        />
+                        <span
+                          onClick={() => form.setValue("image", "")}
+                          className="absolute top-2 right-2 cursor-pointer p-2 bg-red-500 rounded-lg"
+                        >
+                          <IconTrash className="size-5 text-white" />
+                        </span>
+                      </div>
                     ) : (
                       <UploadButton
                         endpoint="imageUploader"
@@ -295,7 +303,6 @@ function CourseUpdate({ data }: { data: ICourse }) {
               </FormItem>
             )}
           />
-
           {/* required */}
           <FormField
             control={form.control}
@@ -450,7 +457,7 @@ function CourseUpdate({ data }: { data: ICourse }) {
               </FormItem>
             )}
           />
-          {/* level */}
+          {/* status
           <FormField
             control={form.control}
             name="status"
@@ -477,7 +484,7 @@ function CourseUpdate({ data }: { data: ICourse }) {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
         </div>
         <Button
           disabled={isLoading}
