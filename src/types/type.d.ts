@@ -10,6 +10,7 @@ interface IMenuItem {
   icon?: React.ReactNode;
   url: string;
   title: string;
+  onlyIcon?: boolean;
 }
 interface IMenuItems {
   id: number;

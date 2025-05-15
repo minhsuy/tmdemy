@@ -23,6 +23,10 @@ import Swal from "sweetalert2";
 import { updateCourse } from "@/lib/actions/course.actions";
 import { ECourseStatus } from "@/types/enums";
 import { toast } from "react-toastify";
+import { Input } from "../ui/input";
+import IconArrowLeft from "../icons/IconArrowLeft";
+import IconArrowRight from "../icons/IconArrowRight";
+import IconAdd from "../icons/IconAdd";
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   const handleDeleteCourse = ({
     slug,
@@ -96,7 +100,18 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   };
   return (
     <div>
-      <Heading className="mb-10">Quản lý khóa học</Heading>
+      <Link
+        href="/manage/course/new"
+        className="flex items-center gap-2 p-2 rounded-md bg-primary text-white fixed right-5  cursor-pointer"
+      >
+        <IconAdd className="size-6"></IconAdd>
+      </Link>
+      <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-10">
+        <Heading className="">Quản lý khóa học</Heading>
+        <div className="w-[300px]">
+          <Input placeholder="Tìm kiếm khóa học..." />
+        </div>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -120,7 +135,11 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                       className="flex-shrink-0 size-16 rounded-lg object-cover"
                     />
                     <div className="flex flex-col gap-1">
-                      <h3 className="font-bold text-base">
+                      <h3
+                        className={`font-bold  text-sm lg:text-base whitespace-nowrap ${
+                          courseItem?._destroy && "line-through text-red-500 "
+                        }`}
+                      >
                         {courseItem?.title}
                       </h3>
                       <h4 className="text-sm text-slate-500">
@@ -133,7 +152,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                 </TableCell>
                 <TableCell>
                   <span className="font-bold text-base">
-                    {courseItem?.price} VNĐ
+                    {courseItem?.price}đ
                   </span>
                 </TableCell>
                 <TableCell>
@@ -142,7 +161,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                       handleChangeStatus(courseItem?.slug, courseItem?.status)
                     }
                     className={cn(
-                      "p-2 rounded-md cursor-pointer",
+                      "p-2 rounded-md cursor-pointer whitespace-nowrap",
                       courseStatus.find(
                         (status) => status.value === courseItem?.status
                       )?.className
@@ -194,6 +213,14 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
             ))}
         </TableBody>
       </Table>
+      <div className="flex justify-end gap-3 mt-5">
+        <button className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100">
+          <IconArrowLeft className="size-7"></IconArrowLeft>
+        </button>
+        <button className="p-2  rounded-md hover dark:text-black hover:text-white hover:bg-primary bg-slate-100 dark:hover:text-white dark:hover:bg-primary">
+          <IconArrowRight className="size-7"></IconArrowRight>
+        </button>
+      </div>
     </div>
   );
 };

@@ -136,7 +136,7 @@ function CourseUpdate({ data }: { data: ICourse }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 min-h-screen"
+        className="space-y-8 min-h-screen mb-16"
       >
         <div className="grid grid-cols-2 gap-8 mt-10 mb-20">
           {/* title */}
@@ -457,43 +457,17 @@ function CourseUpdate({ data }: { data: ICourse }) {
               </FormItem>
             )}
           />
-          {/* status
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Trạng thái</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Trạng thái" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {courseStatus.map((status) => (
-                        <SelectItem key={status.value} value={status.value}>
-                          {status.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
         </div>
-        <Button
-          disabled={isLoading}
-          className="text-white w-[150px]"
-          type="submit"
-          isLoading={isLoading}
-        >
-          Cập nhật khóa học
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            disabled={isLoading}
+            className="text-white w-[150px] "
+            type="submit"
+            isLoading={isLoading}
+          >
+            Cập nhật khóa học
+          </Button>
+        </div>
       </form>
     </Form>
   );

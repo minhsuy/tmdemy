@@ -6,8 +6,17 @@ import { Button } from "@/components/ui/button";
 import { courseLevel } from "@/constants";
 import { ICourse } from "@/database/course.model";
 import { getCourseBySlug } from "@/lib/actions/course.actions";
+import { getUserInfo } from "@/lib/actions/user.action";
+import { ECourseStatus, EUserRole } from "@/types/enums";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import React from "react";
 
 const page = async ({
@@ -17,13 +26,17 @@ const page = async ({
     slug: string;
   };
 }) => {
+  const { userId } = await auth();
+  const user = await getUserInfo({ userId } as any);
   const course = await getCourseBySlug({ slug: params.slug });
-  if (!course?.data) return <PageNotFound></PageNotFound>;
+  if (!course || !course?.data) return <PageNotFound></PageNotFound>;
   const { data }: { data: ICourse } = course;
+  if (data.status === ECourseStatus.PENDING && user?.role !== EUserRole.ADMIN)
+    return <PageNotFound></PageNotFound>;
   const ytb_url = data?.intro_url?.split("v=")[1];
 
   return (
-    <div className="grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen">
+    <div className="grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen mb-12">
       <div>
         <div className="relative aspect-video mb-5">
           {data?.intro_url ? (
@@ -82,10 +95,12 @@ const page = async ({
         <BoxSection title="Q.A">
           {data &&
             data.info.qa.map((qa, index: any) => (
-              <div key={index}>
-                <div>{qa.question}</div>
-                <div>{qa.answer}</div>
-              </div>
+              <Accordion key={index} type="single" collapsible>
+                <AccordionItem value={qa.question}>
+                  <AccordionTrigger>{qa.question}</AccordionTrigger>
+                  <AccordionContent>{qa.answer}</AccordionContent>
+                </AccordionItem>
+              </Accordion>
             ))}
         </BoxSection>
       </div>

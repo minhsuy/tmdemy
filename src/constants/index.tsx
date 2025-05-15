@@ -98,7 +98,7 @@ export const courseStatus: {
   {
     title: "Chờ duyệt",
     value: ECourseStatus.PENDING,
-    className: "bg-yellow-500 text-white",
+    className: "bg-orange-500 text-white",
   },
   {
     title: "Từ chối",
