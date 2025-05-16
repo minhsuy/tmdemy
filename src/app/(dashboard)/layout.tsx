@@ -12,8 +12,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="wrapper lg:grid lg:grid-cols-[300px,minmax(0,1fr)] h-full min-h-screen relative">
       <Sidebar />
-      <div className="flex lg:hidden absolute bottom-0 items-center justify-between w-full p-3">
-        <ul className="flex gap-x-3">
+      <div className="flex lg:hidden gap-3 absolute bottom-0 items-center justify-center w-full p-3">
+        <ul className="flex gap-x-2">
           {menuItems.map((item, index) => (
             <MenuItem
               key={index}
@@ -24,13 +24,12 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
             ></MenuItem>
           ))}
         </ul>
-        <div className="mt-auto flex items-center justify-end gap-x-3">
-          <ModeToggle></ModeToggle>
+        <div className="flex items-center justify-center">
           {!userId ? (
             <Link href={"/sign-in"}>
-              <div className="flex items-center gap-2 bg-primary text-white rounded-md py-2 px-4">
+              <div className="flex items-center gap-2 bg-primary text-white rounded-md p-2">
                 <IconUser className="size-7 bg-primary text-white"></IconUser>
-                <span>Đăng nhập</span>
+                <span className="hidden">Đăng nhập</span>
               </div>
             </Link>
           ) : (
