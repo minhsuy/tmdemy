@@ -46,14 +46,15 @@ const Sidebar = async () => {
   );
 };
 
-export const MenuItem = ({ icon, url, title, onlyIcon }: IMenuItem) => {
+export function MenuItem({ url = "/", title = "", icon, onlyIcon }: IMenuItem) {
   return (
     <li>
       <ActiveLink url={url}>
-        {icon} {onlyIcon ? "" : title}
+        {icon}
+        {onlyIcon ? null : title}
       </ActiveLink>
     </li>
   );
-};
+}
 
 export default Sidebar;

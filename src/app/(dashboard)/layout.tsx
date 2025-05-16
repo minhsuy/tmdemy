@@ -12,21 +12,24 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="wrapper lg:grid lg:grid-cols-[300px,minmax(0,1fr)] h-full min-h-screen relative">
       <Sidebar />
-      <ul className="flex p-3  border-t lg:hidden absolute  bottom-0 left-0 w-full justify-center gap-3 h-16 ">
-        {menuItems.map((item, index) => (
-          <MenuItem
-            key={index}
-            url={item.url}
-            title={item.title}
-            icon={item.icon}
-            onlyIcon={true}
-          ></MenuItem>
-        ))}
-        <div className=" p-3 flex items-center justify-end   lg:hidden absolute  bottom-0 left-0 w-full  gap-3 h-16 ">
+      <div className="flex lg:hidden absolute bottom-0 items-center justify-between w-full p-3">
+        <ul className="flex gap-x-3">
+          {menuItems.map((item, index) => (
+            <MenuItem
+              key={index}
+              url={item.url}
+              title={item.title}
+              icon={item.icon}
+              onlyIcon
+            ></MenuItem>
+          ))}
+        </ul>
+        <div className="mt-auto flex items-center justify-end gap-x-3">
+          <ModeToggle></ModeToggle>
           {!userId ? (
             <Link href={"/sign-in"}>
               <div className="flex items-center gap-2 bg-primary text-white rounded-md py-2 px-4">
-                <IconUser className="hidden size-7 bg-primary text-white"></IconUser>
+                <IconUser className="size-7 bg-primary text-white"></IconUser>
                 <span>Đăng nhập</span>
               </div>
             </Link>
@@ -34,7 +37,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
             <UserButton />
           )}
         </div>
-      </ul>
+      </div>
+
       <main className="p-5 dark:bg-grayDarkest">{children}</main>
     </div>
   );
