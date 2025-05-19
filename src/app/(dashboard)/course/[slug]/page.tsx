@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import React from "react";
+import { ICoursePopulated } from "@/types/type";
 
 const page = async ({
   params,
@@ -30,7 +31,7 @@ const page = async ({
   const user = await getUserInfo({ userId } as any);
   const course = await getCourseBySlug({ slug: params.slug });
   if (!course || !course?.data) return <PageNotFound></PageNotFound>;
-  const { data }: { data: ICourse } = course;
+  const { data }: { data: ICoursePopulated } = course;
   if (data.status === ECourseStatus.PENDING && user?.role !== EUserRole.ADMIN)
     return <PageNotFound></PageNotFound>;
   const ytb_url = data?.intro_url?.split("v=")[1];
@@ -74,6 +75,27 @@ const page = async ({
             <BoxInfo title="Thời lượng">100</BoxInfo>
           </div>
         </BoxSection>
+        <BoxSection title="Nội dung khóa học">
+          <div className="flex flex-col ">
+            {data.lectures.map((lecture) => (
+              <Accordion
+                type="single"
+                collapsible
+                className="w-full"
+                key={lecture._id}
+              >
+                <AccordionItem value={lecture._id}>
+                  <AccordionTrigger>
+                    <div className="flex items-center gap-3 justify-between w-full pr-5">
+                      <div>{lecture.title}</div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent></AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ))}
+          </div>
+        </BoxSection>
         <BoxSection title="Yêu cầu">
           {data &&
             data.info.requirements.map((r, index: number) => (
@@ -93,15 +115,14 @@ const page = async ({
             ))}
         </BoxSection>
         <BoxSection title="Q.A">
-          {data &&
-            data.info.qa.map((qa, index: any) => (
-              <Accordion key={index} type="single" collapsible>
-                <AccordionItem value={qa.question}>
-                  <AccordionTrigger>{qa.question}</AccordionTrigger>
-                  <AccordionContent>{qa.answer}</AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            ))}
+          {data.info.qa.map((qa, index) => (
+            <Accordion type="single" collapsible key={index}>
+              <AccordionItem value={qa.question}>
+                <AccordionTrigger>{qa.question}</AccordionTrigger>
+                <AccordionContent>{qa.answer}</AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ))}
         </BoxSection>
       </div>
       <div>

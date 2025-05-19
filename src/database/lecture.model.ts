@@ -1,7 +1,7 @@
 import { ECourseLevel, ECourseStatus } from "@/types/enums";
 import mongoose, { models, Schema } from "mongoose";
 
-export interface ILecture extends Document {
+export interface TLecture extends Document {
   _id: string;
   title: string;
   course: Schema.Types.ObjectId;
@@ -10,11 +10,10 @@ export interface ILecture extends Document {
   _destroy: boolean;
 }
 
-const lectureSchema = new mongoose.Schema<ILecture>(
+const lectureSchema = new mongoose.Schema<TLecture>(
   {
     title: {
       type: String,
-      required: true,
     },
     _destroy: {
       type: Boolean,

@@ -1,3 +1,4 @@
+import { ILecture, TLecture } from "./../database/lecture.model";
 import { Document } from "mongoose";
 import { EUserRole, EUserStatus } from "./enums";
 import { ICourse } from "@/database/course.model";
@@ -49,7 +50,31 @@ interface IUpdateCourse {
   slug: string;
   updateData: Partial<ICourse>;
 }
-
+interface ICreateLectureParams {
+  path?: string;
+  title?: string;
+  course: string;
+  order?: number;
+}
+interface IUpdateLectureParams {
+  _id: string;
+  updatedData: {
+    path?: string;
+    title?: string;
+    order?: number;
+    _destroy?: boolean;
+  };
+}
+interface ILecture {
+  path?: string;
+  title?: string;
+  course: string;
+  order?: number;
+  _destroy?: boolean;
+}
+export interface ICoursePopulated extends Omit<ICourse, "lectures"> {
+  lectures: TLecture[];
+}
 export {
   IActiveLink,
   IMenuItem,
@@ -59,4 +84,8 @@ export {
   ICreateUser,
   ICreateCourseParams,
   IUpdateCourse,
+  ICreateLectureParams,
+  IUpdateLectureParams,
+  ILecture,
+  ICoursePopulated,
 };

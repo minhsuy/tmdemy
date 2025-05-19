@@ -177,7 +177,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link
-                      href="#"
+                      href={`/manage/course/update-content?slug=${courseItem?.slug}`}
                       className="p-2 bg-primary rounded-md text-white"
                     >
                       <IconStudy className="size-4" />

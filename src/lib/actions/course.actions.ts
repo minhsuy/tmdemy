@@ -1,31 +1,43 @@
 "use server";
-
-import { ICreateCourseParams, IUpdateCourse } from "@/types/type";
+import {
+  ICoursePopulated,
+  ICreateCourseParams,
+  IUpdateCourse,
+} from "@/types/type";
 import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
 import Course, { ICourse } from "@/database/course.model";
 import { revalidatePath } from "next/cache";
 import { ECourseStatus } from "@/types/enums";
+import Lecture from "@/database/lecture.model";
 
 const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   if (!slug) {
     throw new Error("Slug is required");
   }
   try {
-    connectToDatabase();
-    const findCourse = await Course.findOne({ slug });
+    await connectToDatabase();
+    const findCourse = await Course.findOne({ slug }).populate({
+      path: "lectures",
+      model: Lecture,
+      match: { _destroy: false },
+    });
     return {
       success: true,
       data: JSON.parse(JSON.stringify(findCourse)),
     };
   } catch (error) {
     console.log(error);
+    return {
+      success: false,
+      data: null,
+    };
   }
 };
 
 const getCourses = async (): Promise<any> => {
   try {
-    connectToDatabase();
+    await connectToDatabase();
     const courses = await Course.find();
     return courses;
   } catch (error) {
@@ -38,7 +50,7 @@ const createCourse = async (params: ICreateCourseParams): Promise<any> => {
     throw new Error("Course data is required");
   }
   try {
-    connectToDatabase();
+    await connectToDatabase();
     const checkExistCourse = await Course.findOne({ slug: params.slug });
     if (checkExistCourse) {
       return {
@@ -65,7 +77,7 @@ const updateCourse = async (params: IUpdateCourse): Promise<any> => {
     };
   }
   try {
-    connectToDatabase();
+    await connectToDatabase();
     const checkCourseExisting = await Course.findOne({ slug: params.slug });
     if (!checkCourseExisting) {
       return {
@@ -95,7 +107,7 @@ const updateCourse = async (params: IUpdateCourse): Promise<any> => {
 };
 const deleteCourse = async (slug: string, pathname: string): Promise<any> => {
   try {
-    connectToDatabase();
+    await connectToDatabase();
     if (!slug) {
       throw new Error("Slug is required");
     }
