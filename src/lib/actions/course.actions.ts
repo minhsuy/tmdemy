@@ -10,6 +10,7 @@ import Course, { ICourse } from "@/database/course.model";
 import { revalidatePath } from "next/cache";
 import { ECourseStatus } from "@/types/enums";
 import Lecture from "@/database/lecture.model";
+import Lesson from "@/database/lesson.model";
 
 const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   if (!slug) {
@@ -21,6 +22,11 @@ const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
       path: "lectures",
       model: Lecture,
       match: { _destroy: false },
+      populate: {
+        path: "lessons",
+        model: Lesson,
+        match: { _destroy: false },
+      },
     });
     return {
       success: true,

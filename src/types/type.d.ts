@@ -75,6 +75,32 @@ interface ILecture {
 export interface ICoursePopulated extends Omit<ICourse, "lectures"> {
   lectures: TLecture[];
 }
+interface ICreateLessonParams {
+  course: string;
+  lecture: string;
+  title?: string;
+  slug?: string;
+  content?: string;
+  video_url?: string;
+  order?: number;
+  duration?: number;
+  content?: string;
+  _destroy?: boolean;
+  path?: string;
+}
+interface IUpdateLessonParams {
+  _id: string;
+  updatedData: {
+    title?: string;
+    slug?: string;
+    video_url?: string;
+    order?: number;
+    duration?: number;
+    content?: string;
+    _destroy?: boolean;
+    path?: string;
+  };
+}
 export {
   IActiveLink,
   IMenuItem,
@@ -88,4 +114,6 @@ export {
   IUpdateLectureParams,
   ILecture,
   ICoursePopulated,
+  ICreateLessonParams,
+  IUpdateLessonParams,
 };
