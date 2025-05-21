@@ -19,6 +19,8 @@ import IconAdd from "../icons/IconAdd";
 import IconClose from "../icons/IconClose";
 import { createNewLesson, updateLesson } from "@/lib/actions/lesson.actions";
 import Lesson from "@/database/lesson.model";
+import LessonItemUpdate from "../lesson/LessonItemUpdate";
+import slugify from "slugify";
 
 const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
   const { _id, slug, lectures } = data;
@@ -89,6 +91,12 @@ const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
         _id: id,
         updatedData: {
           title: titleLesson,
+          slug: slugify(titleLesson, {
+            lower: true,
+            locale: "vi",
+            remove: /[*+~.()'"!:@,]/g,
+          }),
+
           path: `/manage/course/update-content?slug=${slug}`,
         },
       });
@@ -107,8 +115,8 @@ const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
     e.stopPropagation();
     try {
       Swal.fire({
-        text: `Bạn có muốn xóa chương học này ?`,
-        title: "Xóa chương học",
+        text: `Bạn có muốn xóa bàibài học này ?`,
+        title: "Xóa bài học",
         icon: "error",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -283,7 +291,9 @@ const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
                                   </div>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                  {Lesson.title}
+                                  <LessonItemUpdate
+                                    lesson={Lesson}
+                                  ></LessonItemUpdate>
                                 </AccordionContent>
                               </AccordionItem>
                             </Accordion>
