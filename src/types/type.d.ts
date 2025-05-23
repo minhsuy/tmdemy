@@ -75,6 +75,9 @@ interface ILecture {
 export interface ICoursePopulated extends Omit<ICourse, "lectures"> {
   lectures: TLecture[];
 }
+// export interface ICourseWithLesson extends Omit<ICourse, "lectures"> {
+//   lectures: TLecture[];
+// }
 interface ICreateLessonParams {
   course: string;
   lecture: string;
@@ -87,6 +90,7 @@ interface ICreateLessonParams {
   content?: string;
   _destroy?: boolean;
   path?: string;
+  _id?: string;
 }
 interface IUpdateLessonParams {
   _id: string;

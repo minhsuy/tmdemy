@@ -108,7 +108,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
       </Link>
       <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-10">
         <Heading className="">Quản lý khóa học</Heading>
-        <div className="w-[300px]">
+        <div className="w-[300px] ml-5">
           <Input placeholder="Tìm kiếm khóa học..." />
         </div>
       </div>

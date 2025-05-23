@@ -292,6 +292,7 @@ const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
                                 </AccordionTrigger>
                                 <AccordionContent>
                                   <LessonItemUpdate
+                                    path={`/manage/course/update-content?slug=${slug}`}
                                     lesson={Lesson}
                                   ></LessonItemUpdate>
                                 </AccordionContent>

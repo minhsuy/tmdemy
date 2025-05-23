@@ -19,7 +19,7 @@ const createUser = async (params: ICreateUser): Promise<any> => {
 
 const getUserInfo = async ({ userId }: { userId: string }): Promise<any> => {
   if (!userId) {
-    throw new Error("User ID is required");
+    return;
   }
   try {
     connectToDatabase();

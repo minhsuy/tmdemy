@@ -253,12 +253,9 @@ function CourseUpdate({ data }: { data: ICourse }) {
                       <UploadButton
                         endpoint="imageUploader"
                         onClientUploadComplete={(res) => {
-                          // Do something with the response
                           form.setValue("image", res[0]?.url);
                         }}
-                        onUploadError={(error: Error) => {
-                          // Do something with the error.
-                        }}
+                        onUploadError={(error: Error) => {}}
                       />
                     )}
                   </div>

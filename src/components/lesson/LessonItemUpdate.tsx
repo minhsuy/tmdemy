@@ -15,12 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { updateLesson } from "@/lib/actions/lesson.actions";
-
+import { Editor } from "@tinymce/tinymce-react";
+import { ICreateLessonParams } from "@/types/type";
 const formSchema = z.object({
   title: z.string().min(5, {
     message: "Tên bài học phải có ít nhất 5 ký tự",
@@ -31,8 +32,14 @@ const formSchema = z.object({
   duration: z.number().optional(),
 });
 
-function LessonItemUpdate({ lesson }: { lesson: any }) {
-  const router = useRouter();
+function LessonItemUpdate({
+  lesson,
+  path,
+}: {
+  lesson: ICreateLessonParams;
+  path: string;
+}) {
+  console.log(lesson);
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,8 +56,11 @@ function LessonItemUpdate({ lesson }: { lesson: any }) {
     setIsLoading(true);
     try {
       const updatedLesson = await updateLesson({
-        _id: lesson._id,
-        updatedData: values,
+        _id: lesson._id!,
+        updatedData: {
+          ...values,
+          path,
+        },
       });
       if (updatedLesson.success) {
         toast.success(updatedLesson.message);
@@ -114,7 +124,7 @@ function LessonItemUpdate({ lesson }: { lesson: any }) {
               </FormItem>
             )}
           />
-          {/* video_url  */}
+          {/* duration  */}
           <FormField
             control={form.control}
             name="duration"
@@ -127,6 +137,30 @@ function LessonItemUpdate({ lesson }: { lesson: any }) {
                     type="number"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* content  */}
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel>Nội dung</FormLabel>
+                <FormControl>
+                  <Editor
+                    apiKey="ox2i4ag3cmm97n826f5eo9joriytzho3w1axxucno0kpevzp"
+                    init={{
+                      plugins:
+                        "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount",
+                      toolbar:
+                        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+                    }}
+                    value={field.value}
+                    onEditorChange={(content: any) => field.onChange(content)}
                   />
                 </FormControl>
                 <FormMessage />
