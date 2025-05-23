@@ -73,4 +73,28 @@ const updateLesson = async (params: IUpdateLessonParams): Promise<any> => {
     console.log(error);
   }
 };
-export { createNewLesson, updateLesson };
+const getLessonBySlug = async ({
+  slug,
+  course,
+}: {
+  slug: string;
+  course: string;
+}): Promise<any> => {
+  if (!slug || !course) return;
+  try {
+    await connectToDatabase();
+    const findLesson = await Lesson.findOne({ slug, course });
+    if (!findLesson)
+      return {
+        success: false,
+        data: null,
+      };
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(findLesson)),
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+export { createNewLesson, updateLesson, getLessonBySlug };

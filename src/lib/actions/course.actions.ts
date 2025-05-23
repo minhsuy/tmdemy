@@ -34,10 +34,6 @@ const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
     };
   } catch (error) {
     console.log(error);
-    return {
-      success: false,
-      data: null,
-    };
   }
 };
 

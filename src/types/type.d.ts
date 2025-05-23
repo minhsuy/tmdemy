@@ -105,6 +105,10 @@ interface IUpdateLessonParams {
     path?: string;
   };
 }
+export interface TLecturePopulated extends Omit<TLecture, "lessons"> {
+  lessons: ICreateLessonParams[];
+}
+
 export {
   IActiveLink,
   IMenuItem,

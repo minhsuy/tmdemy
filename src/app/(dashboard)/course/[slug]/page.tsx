@@ -18,7 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import React from "react";
-import { ICoursePopulated } from "@/types/type";
+import { ICoursePopulated, ICreateLessonParams } from "@/types/type";
 
 const page = async ({
   params,
@@ -90,7 +90,22 @@ const page = async ({
                       <div>{lecture.title}</div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent></AccordionContent>
+                  <AccordionContent className="!bg-transparent border-none p-0">
+                    <div className="flex flex-col gap-3">
+                      {lecture.lessons.map((lesson: any) => (
+                        <div
+                          key={lesson._id}
+                          className="flex items-center gap-3 bgDarkMode  borerDarkMode rounded-lg border border-gray-300 p-3 text-sm font-medium"
+                        >
+                          <IconPlay className="size-4" />
+                          <h4>{lesson.title}</h4>
+                          <span className="ml-auto text-xs font-semibold">
+                            {lesson.duration} phút
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
                 </AccordionItem>
               </Accordion>
             ))}
