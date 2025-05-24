@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/accordion";
 import LessonItem from "@/components/lesson/LessonItem";
 import Heading from "@/components/typography/Heading";
+import { ICourse } from "@/database/course.model";
+import LessonContent from "@/components/lesson/LessonContent";
 
 const page = async ({
   params,
@@ -31,6 +33,7 @@ const page = async ({
   const findCourse = await getCourseBySlug({ slug: course });
   const courseId = findCourse.data._id.toString();
   if (!findCourse.data) return <PageNotFound></PageNotFound>;
+  const { data }: { data: ICourse } = findCourse;
   const { slug } = searchParams;
   const lesson = await getLessonBySlug({
     slug,
@@ -41,11 +44,11 @@ const page = async ({
     return <PageNotFound></PageNotFound>;
   if (!lesson || !lesson.data) return <PageNotFound></PageNotFound>;
   const { data: lessonList }: { data: ILesson[] } = getAllLessons;
-  const { data }: { data: ILesson } = lesson;
-  const url = new URL(data.video_url);
+  const { data: lessonDetail }: { data: ILesson } = lesson;
+  const url = new URL(lessonDetail.video_url);
   const videoId = url.searchParams.get("v");
   const findLesson = lessonList.findIndex(
-    (lesson) => data.slug === lesson.slug
+    (lesson) => lessonDetail.slug === lesson.slug
   );
   if (findLesson === -1) return <PageNotFound></PageNotFound>;
   const prevLesson = lessonList[findLesson - 1];
@@ -69,43 +72,16 @@ const page = async ({
           ></LessonNavigation>
           <div></div>
         </div>
-        <Heading className="my-10">{data.title}</Heading>
-        <div className="p-5 rounded-lg bgDarkMode border border-gray-400 entry-content">
-          <div dangerouslySetInnerHTML={{ __html: data.content || "" }}></div>
+        <Heading className="my-10">{lessonDetail.title}</Heading>
+        <div className="p-5 rounded-lg bgDarkMode border border-gray-300 entry-content">
+          <div
+            dangerouslySetInnerHTML={{ __html: lessonDetail.content || "" }}
+          ></div>
         </div>
       </div>
 
       <div className="flex flex-col gap-5 mb-10">
-        <div className="flex flex-col ">
-          {findCourse?.data?.lectures?.map((lecture: any) => (
-            <Accordion
-              type="single"
-              collapsible
-              className="w-full"
-              key={lecture._id}
-            >
-              <AccordionItem value={lecture._id}>
-                <AccordionTrigger>
-                  <div className="flex items-center gap-3 justify-between w-full pr-5">
-                    <div>{lecture.title}</div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="!bg-transparent border-none p-0">
-                  <div className="flex flex-col gap-3">
-                    {lecture.lessons.map((lesson: any) => (
-                      <LessonItem
-                        url={`/${course}/lesson?slug=${lesson.slug}`}
-                        key={lesson._id}
-                        lesson={lesson}
-                        isActive={lesson.slug === slug}
-                      ></LessonItem>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
-        </div>
+        <LessonContent data={data} course={course} slug={slug}></LessonContent>
       </div>
     </div>
   );

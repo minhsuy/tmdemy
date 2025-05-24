@@ -20,6 +20,7 @@ import {
 import React from "react";
 import { ICoursePopulated, ICreateLessonParams } from "@/types/type";
 import LessonItem from "@/components/lesson/LessonItem";
+import LessonContent from "@/components/lesson/LessonContent";
 
 const page = async ({
   params,
@@ -76,34 +77,7 @@ const page = async ({
           </div>
         </BoxSection>
         <BoxSection title="Nội dung khóa học">
-          <div className="flex flex-col ">
-            {data.lectures.map((lecture) => (
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-                key={lecture._id}
-              >
-                <AccordionItem value={lecture._id}>
-                  <AccordionTrigger>
-                    <div className="flex items-center gap-3 justify-between w-full pr-5">
-                      <div>{lecture.title}</div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="!bg-transparent border-none p-0">
-                    <div className="flex flex-col gap-3">
-                      {lecture.lessons.map((lesson: any) => (
-                        <LessonItem
-                          key={lesson._id}
-                          lesson={lesson}
-                        ></LessonItem>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            ))}
-          </div>
+          <LessonContent data={data}></LessonContent>
         </BoxSection>
         <BoxSection title="Yêu cầu">
           {data &&

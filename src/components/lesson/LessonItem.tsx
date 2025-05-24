@@ -19,7 +19,7 @@ const LessonItem = ({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 bgDarkMode border borderDarkMode rounded-lg p-4 font-medium text-sm border-gray-400",
+        "flex items-center gap-2 bgDarkMode border borderDarkMode rounded-lg p-3 font-medium text-sm border-gray-300",
         isActive
           ? "text-white bg-primary font-semibold border-none pointer-events-none"
           : ""
