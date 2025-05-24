@@ -97,4 +97,23 @@ const getLessonBySlug = async ({
     console.log(error);
   }
 };
-export { createNewLesson, updateLesson, getLessonBySlug };
+const getAllLesson = async ({ course }: { course: string }): Promise<any> => {
+  if (!course) return;
+  try {
+    await connectToDatabase();
+    const getAllLessonInCourse = await Lesson.find({ course });
+    if (!getAllLessonInCourse) {
+      return {
+        success: false,
+        data: null,
+      };
+    }
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(getAllLessonInCourse)),
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+export { createNewLesson, updateLesson, getLessonBySlug, getAllLesson };

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import React from "react";
 import { ICoursePopulated, ICreateLessonParams } from "@/types/type";
+import LessonItem from "@/components/lesson/LessonItem";
 
 const page = async ({
   params,
@@ -35,7 +36,6 @@ const page = async ({
   if (data.status === ECourseStatus.PENDING && user?.role !== EUserRole.ADMIN)
     return <PageNotFound></PageNotFound>;
   const ytb_url = data?.intro_url?.split("v=")[1];
-
   return (
     <div className="grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen mb-12">
       <div>
@@ -93,16 +93,10 @@ const page = async ({
                   <AccordionContent className="!bg-transparent border-none p-0">
                     <div className="flex flex-col gap-3">
                       {lecture.lessons.map((lesson: any) => (
-                        <div
+                        <LessonItem
                           key={lesson._id}
-                          className="flex items-center gap-3 bgDarkMode  borerDarkMode rounded-lg border border-gray-300 p-3 text-sm font-medium"
-                        >
-                          <IconPlay className="size-4" />
-                          <h4>{lesson.title}</h4>
-                          <span className="ml-auto text-xs font-semibold">
-                            {lesson.duration} phút
-                          </span>
-                        </div>
+                          lesson={lesson}
+                        ></LessonItem>
                       ))}
                     </div>
                   </AccordionContent>
