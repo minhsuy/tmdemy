@@ -1,15 +1,27 @@
-import { IconHome } from "@/components/icons";
-import Link from "next/link";
+"use client";
+import { useRouter } from "next/navigation";
 
 const PageNotFound = () => {
+  const router = useRouter();
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="font-bold text-7xl">404</h1>
-      <h2 className="mb-5">Page not found</h2>
-      <Link href="/" className="flex items-center gap-2 hover:text-primary">
-        <IconHome className="size-5"></IconHome>
-        Trang chủ
-      </Link>
+    <div className="py-5 lg:py-20 my-auto">
+      <h1 className="text-3xl lg:text-5xl mb-5 font-bold text-center flex flex-col gap-5 items-center">
+        <span className="text-gradient inline-block text-[100px] relative">
+          <span className="text-primary">4</span>
+          <span>0</span>
+          <span className="text-secondary">4</span>
+        </span>
+        <span className="font-extrabold">Không tìm thấy trang</span>
+      </h1>
+      <p className="text-center text-base lg:text-xl max-w-[600px] mx-auto mb-10 text-gray-500">
+        Dường như trang bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.
+      </p>
+      <button
+        onClick={() => router.push("/")}
+        className="mx-auto flex items-center justify-center h-12 px-5 rounded-full bg-primary text-white font-bold min-w-[200px] "
+      >
+        Quay lại
+      </button>
     </div>
   );
 };

@@ -108,6 +108,12 @@ interface IUpdateLessonParams {
 export interface TLecturePopulated extends Omit<TLecture, "lessons"> {
   lessons: ICreateLessonParams[];
 }
+export interface ICreateHistory {
+  course: string;
+  lesson: string;
+  checked: boolean | string;
+  path?: string;
+}
 
 export {
   IActiveLink,

@@ -73,6 +73,6 @@
     @apply pl-10;
   }
   a {
-    @apply underline text-primary font-medium;
+    @apply underline text-primary font-bold;
   }
 }

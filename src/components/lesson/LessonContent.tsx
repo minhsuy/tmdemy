@@ -7,14 +7,17 @@ import {
 } from "@/components/ui/accordion";
 import { ICourse } from "@/database/course.model";
 import LessonItem from "./LessonItem";
+import { IHistory } from "@/database/history.model";
 const LessonContent = ({
   data,
   course,
   slug,
+  getHistories = [],
 }: {
   data: any;
   course?: string;
   slug?: string;
+  getHistories?: IHistory[];
 }) => {
   return (
     <div className="flex flex-col ">
@@ -39,6 +42,10 @@ const LessonContent = ({
                     key={lesson._id}
                     lesson={lesson}
                     isActive={lesson.slug === slug}
+                    isChecked={getHistories.some(
+                      (history) =>
+                        history.lesson.toString() === lesson._id.toString()
+                    )}
                   ></LessonItem>
                 ))}
               </div>

@@ -17,6 +17,10 @@ import LessonItem from "@/components/lesson/LessonItem";
 import Heading from "@/components/typography/Heading";
 import { ICourse } from "@/database/course.model";
 import LessonContent from "@/components/lesson/LessonContent";
+import { auth } from "@clerk/nextjs/server";
+import { getUserInfo } from "@/lib/actions/user.action";
+import { EUserRole } from "@/types/enums";
+import { getHistory } from "@/lib/actions/history.action";
 
 const page = async ({
   params,
@@ -31,6 +35,15 @@ const page = async ({
 }) => {
   const { course } = params;
   const findCourse = await getCourseBySlug({ slug: course });
+  const { userId } = await auth();
+  if (!userId) return <PageNotFound></PageNotFound>;
+  const user = await getUserInfo({ userId });
+  if (!user) return <PageNotFound></PageNotFound>;
+  if (
+    !user.courses.includes(findCourse.data._id.toString()) &&
+    user.role !== EUserRole.ADMIN
+  )
+    return <PageNotFound></PageNotFound>;
   const courseId = findCourse.data._id.toString();
   if (!findCourse.data) return <PageNotFound></PageNotFound>;
   const { data }: { data: ICourse } = findCourse;
@@ -53,7 +66,9 @@ const page = async ({
   if (findLesson === -1) return <PageNotFound></PageNotFound>;
   const prevLesson = lessonList[findLesson - 1];
   const nextLesson = lessonList[findLesson + 1];
-
+  const getHistories = await getHistory({ course: data._id.toString() });
+  const percentage =
+    ((getHistories?.length as number) / lessonList.length) * 100;
   return (
     <div className="grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start">
       <div>
@@ -80,8 +95,19 @@ const page = async ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 mb-10">
-        <LessonContent data={data} course={course} slug={slug}></LessonContent>
+      <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
+        <div className="h-3 w-full rounded-full border border-gray-300 mb-2 ">
+          <div
+            className="h-full w-0 rounded-full transition-all duration-300 bg-primary"
+            style={{ width: `${percentage}%` }}
+          ></div>
+        </div>
+        <LessonContent
+          getHistories={getHistories}
+          data={data}
+          course={course}
+          slug={slug}
+        ></LessonContent>
       </div>
     </div>
   );
