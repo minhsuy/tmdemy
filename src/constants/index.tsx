@@ -106,3 +106,5 @@ export const courseStatus: {
     className: "bg-red-500 text-white",
   },
 ];
+
+export const lessonSaveKey = "lastLesson";

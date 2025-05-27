@@ -2,7 +2,17 @@ import { ICourse } from "@/database/course.model";
 import Image from "next/image";
 import Link from "next/link";
 import { IconClock, IconEye, IconStar } from "../icons";
-const CourseItem = ({ data }: { data: ICourse }) => {
+
+const CourseItem = ({
+  data,
+  cta,
+  url = "",
+}: {
+  data: ICourse;
+  cta?: string;
+  url?: string;
+}) => {
+  const courseUrl = cta ? url : `/course/${data?.slug}`;
   const courseInfo = [
     {
       title: data?.views,
@@ -21,7 +31,7 @@ const CourseItem = ({ data }: { data: ICourse }) => {
   ];
   return (
     <div className="bg-white dark:bg-grayDarker dark:border-opacity-10 border border-gray-200 p-4 rounded-2xl">
-      <Link href={`/course/${data?.slug}`} className="block h-[180px] relative">
+      <Link href={courseUrl} className="block h-[180px] relative">
         <Image
           src={
             data?.image ||
@@ -40,7 +50,7 @@ const CourseItem = ({ data }: { data: ICourse }) => {
       </Link>
       <div className="pt-4 ">
         <h3 className="font-bold text-lg mb-3 h-[55px] overflow-hidden">
-          <Link href={`/course/${data?.slug}`} className="hover:text-primary">
+          <Link href={courseUrl} className="hover:text-primary">
             {" "}
             {data?.title}
           </Link>
@@ -59,10 +69,10 @@ const CourseItem = ({ data }: { data: ICourse }) => {
         </div>
 
         <Link
-          href={`/course/${data?.slug}`}
+          href={courseUrl}
           className="flex items-center justify-center w-full mt-10 rounded-lg text-white font-semibold bg-primary h-12"
         >
-          Xem chi tiết
+          {cta || "Xem chi tiết"}
         </Link>
       </div>
     </div>

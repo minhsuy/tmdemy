@@ -40,7 +40,14 @@ const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
 const getCourses = async (): Promise<any> => {
   try {
     await connectToDatabase();
-    const courses = await Course.find();
+    const courses = await Course.find().populate({
+      path: "lectures",
+      model: Lecture,
+      populate: {
+        path: "lessons",
+        model: Lesson,
+      },
+    });
     return courses;
   } catch (error) {
     console.log(error);

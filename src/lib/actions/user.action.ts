@@ -3,6 +3,8 @@ import User from "@/database/user.model";
 import { ICreateUser } from "@/types/type";
 import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
+import Course from "@/database/course.model";
+import Lecture from "@/database/lecture.model";
 
 const createUser = async (params: ICreateUser): Promise<any> => {
   if (Object.keys(params).length === 0) {
@@ -37,5 +39,33 @@ const getUserInfo = async ({ userId }: { userId: string }): Promise<any> => {
     });
   }
 };
+const getUserCourses = async ({ userId }: { userId: string }) => {
+  if (!userId) {
+    return;
+  }
+  try {
+    connectToDatabase();
+    const userCourses = await User.findOne({ clerkId: userId }).populate({
+      path: "courses",
+      model: Course,
+      populate: {
+        path: "lectures",
+        model: Lecture,
+        match: { _destroy: false },
+        populate: {
+          path: "lessons",
+          model: Lecture,
+          match: { _destroy: false },
+        },
+      },
+    });
+    if (!userCourses) {
+      return;
+    }
+    return JSON.parse(JSON.stringify(userCourses));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export { createUser, getUserInfo };
+export { createUser, getUserInfo, getUserCourses };

@@ -21,6 +21,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserInfo } from "@/lib/actions/user.action";
 import { EUserRole } from "@/types/enums";
 import { getHistory } from "@/lib/actions/history.action";
+import LessonSaveUrl from "./LessonSaveUrl";
 
 const page = async ({
   params,
@@ -72,6 +73,11 @@ const page = async ({
   return (
     <div className="grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start">
       <div>
+        <LessonSaveUrl
+          course={course}
+          slug={slug}
+          url={`/${course}/lesson?slug=${slug}`}
+        ></LessonSaveUrl>
         <div className="relative mb-5 aspect-video">
           <iframe
             allowFullScreen
