@@ -7,7 +7,6 @@ import React from "react";
 
 const StudyCourses = ({ courseList }: { courseList: ICourse[] }) => {
   if (!courseList) return null;
-  console.log(courseList);
   const lastLesson =
     JSON.parse(localStorage?.getItem("lastLesson") || "[]") || [];
   return (

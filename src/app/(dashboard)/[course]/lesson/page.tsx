@@ -36,6 +36,7 @@ const page = async ({
 }) => {
   const { course } = params;
   const findCourse = await getCourseBySlug({ slug: course });
+  if (!findCourse.data) return <PageNotFound></PageNotFound>;
   const { userId } = await auth();
   if (!userId) return <PageNotFound></PageNotFound>;
   const user = await getUserInfo({ userId });
@@ -46,7 +47,6 @@ const page = async ({
   )
     return <PageNotFound></PageNotFound>;
   const courseId = findCourse.data._id.toString();
-  if (!findCourse.data) return <PageNotFound></PageNotFound>;
   const { data }: { data: ICourse } = findCourse;
   const { slug } = searchParams;
   const lesson = await getLessonBySlug({
@@ -59,10 +59,9 @@ const page = async ({
   if (!lesson || !lesson.data) return <PageNotFound></PageNotFound>;
   const { data: lessonList }: { data: ILesson[] } = getAllLessons;
   const { data: lessonDetail }: { data: ILesson } = lesson;
-  const url = new URL(lessonDetail.video_url);
-  const videoId = url.searchParams.get("v");
+
   const findLesson = lessonList.findIndex(
-    (lesson) => lessonDetail.slug === lesson.slug
+    (lesson) => lessonDetail.slug === slug
   );
   if (findLesson === -1) return <PageNotFound></PageNotFound>;
   const prevLesson = lessonList[findLesson - 1];
@@ -70,6 +69,8 @@ const page = async ({
   const getHistories = await getHistory({ course: data._id.toString() });
   const percentage =
     ((getHistories?.length as number) / lessonList.length) * 100;
+  const url = new URL(lessonDetail.video_url);
+  const videoId = url.searchParams.get("v");
   return (
     <div className="grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start">
       <div>
