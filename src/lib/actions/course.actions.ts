@@ -1,5 +1,6 @@
 "use server";
 import {
+  getCourseConditionParams,
   ICoursePopulated,
   ICreateCourseParams,
   IUpdateCourse,
@@ -11,6 +12,7 @@ import { revalidatePath } from "next/cache";
 import { ECourseStatus } from "@/types/enums";
 import Lecture from "@/database/lecture.model";
 import Lesson from "@/database/lesson.model";
+import { FilterQuery } from "mongoose";
 
 const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   if (!slug) {
@@ -37,17 +39,33 @@ const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   }
 };
 
-const getCourses = async (): Promise<any> => {
+const getCourses = async (params: getCourseConditionParams): Promise<any> => {
+  if (!params) {
+    params = {};
+  }
+  const { search, page = 1, limit = 10, status } = params;
+  const query: FilterQuery<typeof Course> = {};
+  const skip = (page - 1) * limit;
+  if (search) {
+    query.$or = [{ title: { $regex: search, $options: "i" } }];
+  }
+  if (status) {
+    query.status = status;
+  }
   try {
     await connectToDatabase();
-    const courses = await Course.find().populate({
-      path: "lectures",
-      model: Lecture,
-      populate: {
-        path: "lessons",
-        model: Lesson,
-      },
-    });
+    const courses = await Course.find(query)
+      .populate({
+        path: "lectures",
+        model: Lecture,
+        populate: {
+          path: "lessons",
+          model: Lesson,
+        },
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
     return courses;
   } catch (error) {
     console.log(error);

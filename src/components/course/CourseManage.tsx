@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -27,7 +27,29 @@ import { Input } from "../ui/input";
 import IconArrowLeft from "../icons/IconArrowLeft";
 import IconArrowRight from "../icons/IconArrowRight";
 import IconAdd from "../icons/IconAdd";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { debounce } from "lodash";
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
   const handleDeleteCourse = ({
     slug,
     _destroy,
@@ -75,42 +97,92 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   };
 
   const handleChangeStatus = (slug: string, status: string) => {
-    Swal.fire({
-      text: `Bạn có muốn duyệt khóa học này ?`,
-      title: "Duyệt khóa học",
-      icon: "error",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Đồng ý",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await updateCourse({
-          slug,
-          updateData: {
-            status:
-              status === ECourseStatus.PENDING
-                ? ECourseStatus.ACTIVE
-                : ECourseStatus.PENDING,
-          },
-        });
-        toast.success("Khóa học đã được duyệt !");
-      }
-    });
+    if (status === ECourseStatus.ACTIVE) {
+      Swal.fire({
+        text: `Bạn có muốn hủy duyệt khóa học này ?`,
+        title: "Hủy duyệt khóa học",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Đồng ý",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await updateCourse({
+            slug,
+            updateData: {
+              status: ECourseStatus.PENDING,
+            },
+          });
+          toast.success("Khóa học đã được duyệt !");
+        }
+      });
+    } else
+      Swal.fire({
+        text: `Bạn có muốn duyệt khóa học này ?`,
+        title: "Duyệt khóa học",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Đồng ý",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await updateCourse({
+            slug,
+            updateData: {
+              status: ECourseStatus.ACTIVE,
+            },
+          });
+          toast.success("Khóa học đã được duyệt !");
+        }
+      });
   };
+  const handleSearchCourses = debounce((value: string) => {
+    router.push(pathname + "?" + createQueryString("search", value));
+  }, 700);
+  const handleGetStatusCourse = (value: string) => {
+    router.push(pathname + "?" + createQueryString("status", value));
+  };
+  const [page, setPage] = useState(1);
+  const handleChangePage = (action: "next" | "prev") => {
+    if (action === "prev" && page === 1) return;
+    if (action === "prev") setPage(page - 1);
+    else setPage(page + 1);
+  };
+  useEffect(() => {
+    router.push(pathname + "?" + createQueryString("page", page + ""));
+  }, [page]);
   return (
     <div>
       <Link
         href="/manage/course/new"
-        className="flex items-center gap-2 p-2 rounded-md bg-primary text-white fixed right-5  cursor-pointer"
+        className="size-10 rounded-full bg-primary flexCenter text-white fixed right-5 bottom-10 hover hover:animate-spin"
       >
         <IconAdd className="size-6"></IconAdd>
       </Link>
-      <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-10">
+      <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-10 mr-2">
         <Heading className="">Quản lý khóa học</Heading>
-        <div className="w-[300px] ml-5">
-          <Input placeholder="Tìm kiếm khóa học..." />
+        <div className="w-[300px]">
+          <Input
+            placeholder="Tìm kiếm khóa học..."
+            onChange={(e) => handleSearchCourses(e.target.value)}
+          />
         </div>
+        <Select onValueChange={(value) => handleGetStatusCourse(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Trạng thái" />
+          </SelectTrigger>
+          <SelectContent>
+            {courseStatus &&
+              courseStatus.length > 0 &&
+              courseStatus.map((status) => (
+                <SelectItem value={status.value} key={status.value}>
+                  {status.title}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
       </div>
       <Table>
         <TableHeader>
@@ -214,10 +286,16 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
         </TableBody>
       </Table>
       <div className="flex justify-end gap-3 mt-5">
-        <button className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100">
+        <button
+          className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100"
+          onClick={() => handleChangePage("prev")}
+        >
           <IconArrowLeft className="size-7"></IconArrowLeft>
         </button>
-        <button className="p-2  rounded-md hover dark:text-black hover:text-white hover:bg-primary bg-slate-100 dark:hover:text-white dark:hover:bg-primary">
+        <button
+          className="p-2  rounded-md hover dark:text-black hover:text-white hover:bg-primary bg-slate-100 dark:hover:text-white dark:hover:bg-primary"
+          onClick={() => handleChangePage("next")}
+        >
           <IconArrowRight className="size-7"></IconArrowRight>
         </button>
       </div>

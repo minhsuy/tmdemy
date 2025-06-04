@@ -114,7 +114,12 @@ export interface ICreateHistory {
   checked: boolean | string;
   path?: string;
 }
-
+export interface getCourseConditionParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}
 export {
   IActiveLink,
   IMenuItem,
