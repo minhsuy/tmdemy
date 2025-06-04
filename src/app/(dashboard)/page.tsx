@@ -8,7 +8,12 @@ import React from "react";
 import PageNotFound from "../not-found";
 
 const page = async () => {
-  const courses = (await getCourses()) || [];
+  const courses =
+    (await getCourses({
+      limit: 10,
+      status: ECourseStatus.ACTIVE,
+      page: 1,
+    })) || [];
   if (!courses) return null;
   return (
     <div>
