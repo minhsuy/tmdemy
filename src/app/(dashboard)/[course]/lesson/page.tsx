@@ -61,7 +61,7 @@ const page = async ({
   const { data: lessonDetail }: { data: ILesson } = lesson;
 
   const findLesson = lessonList.findIndex(
-    (lesson) => lessonDetail.slug === slug
+    (lesson) => lessonDetail.slug === lesson.slug
   );
   if (findLesson === -1) return <PageNotFound></PageNotFound>;
   const prevLesson = lessonList[findLesson - 1];

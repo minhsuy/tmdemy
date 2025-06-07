@@ -14,7 +14,7 @@ const page = async () => {
   const { userId } = await auth();
   if (!userId) return;
   const userCourses = await getUserCourses({ userId });
-  const getAllCourse = await getCourses();
+  const getAllCourse = await getCourses({});
   const courseList =
     userCourses?.role === EUserRole.ADMIN ? getAllCourse : userCourses.courses;
   return (

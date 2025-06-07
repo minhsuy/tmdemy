@@ -7,17 +7,25 @@ import { ECourseStatus } from "@/types/enums";
 import React from "react";
 import PageNotFound from "../not-found";
 
-const page = async () => {
+const page = async ({
+  searchParams,
+}: {
+  searchParams: {
+    search: string;
+    page: number;
+  };
+}) => {
   const courses =
     (await getCourses({
-      limit: 10,
-      status: ECourseStatus.ACTIVE,
-      page: 1,
+      search: searchParams?.search,
+      page: searchParams?.page,
     })) || [];
   if (!courses) return null;
   return (
     <div>
-      <Heading>Khám phá</Heading>
+      <Heading search page>
+        Khám phá
+      </Heading>
       <CourseGrid>
         {courses &&
           courses

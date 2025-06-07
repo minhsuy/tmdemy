@@ -2,6 +2,7 @@ import { ICourse } from "@/database/course.model";
 import Image from "next/image";
 import Link from "next/link";
 import { IconClock, IconEye, IconStar } from "../icons";
+import { formatMoney } from "@/utils";
 
 const CourseItem = ({
   data,
@@ -64,7 +65,7 @@ const CourseItem = ({
           ))}
 
           <span className="font-bold text-primary ml-auto text-base">
-            {data?.price}
+            {formatMoney(data?.price)} đ
           </span>
         </div>
 

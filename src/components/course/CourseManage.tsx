@@ -114,7 +114,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
               status: ECourseStatus.PENDING,
             },
           });
-          toast.success("Khóa học đã được duyệt !");
+          toast.success("Khóa học đã bị hủy duyệt !");
         }
       });
     } else
@@ -152,6 +152,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   };
   useEffect(() => {
     router.push(pathname + "?" + createQueryString("page", page + ""));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   return (
     <div>

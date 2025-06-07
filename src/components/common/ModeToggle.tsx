@@ -29,19 +29,19 @@ export function ModeToggle() {
           className="cursor-pointer p-2 hover hover:bg-primary hover:text-white transition-all"
           onClick={() => setTheme("light")}
         >
-          Light
+          Sáng
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer p-2 hover hover:bg-primary hover:text-white transition-all"
           onClick={() => setTheme("dark")}
         >
-          Dark
+          Tối
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer p-2 hover hover:bg-primary hover:text-white transition-all"
           onClick={() => setTheme("system")}
         >
-          System
+          Hệ thống
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
