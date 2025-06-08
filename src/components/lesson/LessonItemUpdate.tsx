@@ -177,9 +177,6 @@ function LessonItemUpdate({
           >
             Cập nhật
           </Button>
-          <Link href="/" className="text-sm text-slate-600">
-            Xem trước
-          </Link>
         </div>
       </form>
     </Form>

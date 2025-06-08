@@ -11,7 +11,7 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   }
   const user = await getUserInfo({ userId });
   if (user && user.role !== EUserRole.ADMIN) {
-    return PageNotFound();
+    return <PageNotFound></PageNotFound>;
   }
   return <div>{children}</div>;
 };

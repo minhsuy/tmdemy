@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { courseLevel } from "@/constants";
 import { ICourse } from "@/database/course.model";
 import { getCourseBySlug } from "@/lib/actions/course.actions";
-import { getUserInfo } from "@/lib/actions/user.action";
+import { getUserCourses, getUserInfo } from "@/lib/actions/user.action";
 import { ECourseStatus, EUserRole } from "@/types/enums";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
@@ -22,6 +22,8 @@ import { ICoursePopulated, ICreateLessonParams } from "@/types/type";
 import LessonItem from "@/components/lesson/LessonItem";
 import LessonContent from "@/components/lesson/LessonContent";
 import { formatMoney } from "@/utils";
+import Link from "next/link";
+import LinkToErrolCourse from "./LinkToErrolCourse";
 
 const page = async ({
   params,
@@ -31,13 +33,17 @@ const page = async ({
   };
 }) => {
   const { userId } = await auth();
-  const user = await getUserInfo({ userId } as any);
+  const user = await getUserCourses({ userId } as any);
   const course = await getCourseBySlug({ slug: params.slug });
   if (!course || !course?.data) return <PageNotFound></PageNotFound>;
   const { data }: { data: ICoursePopulated } = course;
+
   if (data.status === ECourseStatus.PENDING && user?.role !== EUserRole.ADMIN)
     return <PageNotFound></PageNotFound>;
   const ytb_url = data?.intro_url?.split("v=")[1];
+  const includesCourses = user?.courses?.some(
+    (courseId: any) => courseId._id.toString() === data._id.toString()
+  );
   return (
     <div className="grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen mb-12">
       <div>
@@ -112,17 +118,23 @@ const page = async ({
       <div>
         <div className="bg-white rounded-lg p-5 ">
           <div className="flex items-center gap-2 mb-3">
-            <strong className="text-primary text-xl font-bold">
-              {formatMoney(data?.price)} đ
-            </strong>
+            <div className="text-primary text-xl font-bold">
+              {data?.price === 0 ? (
+                "Miễn phí"
+              ) : (
+                <strong>{formatMoney(data?.price)} đ</strong>
+              )}
+            </div>
             <span className="text-slate-400 line-through text-sm">
-              {formatMoney(data?.sale_price)}
+              {data?.price > 0 && formatMoney(data?.sale_price)}
             </span>
             <span className="ml-auto inline-block px-3 py-1 rounded-lg bg-primary text-primary bg-opacity-10 font-semibold text-sm">
-              {Math.floor(
-                ((data?.sale_price - data?.price) / data?.sale_price) * 100
-              )}
-              %
+              {data?.price > 0 &&
+                Math.floor(
+                  (((data?.sale_price - data?.price) / data?.sale_price) *
+                    100) |
+                    0
+                ) + "%"}
             </span>
           </div>
           <h3 className="font-bold mb-3 text-sm">Khóa học gồm có:</h3>
@@ -144,7 +156,23 @@ const page = async ({
               <span>Tài liệu kèm theo</span>
             </li>
           </ul>
-          <Button className="w-full text-white">Mua khóa học</Button>
+          {(includesCourses || user?.role === EUserRole.ADMIN) && (
+            <Link
+              href={`/${data?.slug}/lesson?slug=${
+                (data?.lectures[0]?.lessons[0] as any)?.slug
+              }`}
+              className="flex items-center justify-center w-full mt-10 rounded-lg text-white font-semibold bg-primary h-10"
+            >
+              Tiếp tục học
+            </Link>
+          )}
+          {!includesCourses && user?.role !== EUserRole.ADMIN && (
+            <LinkToErrolCourse
+              user={user}
+              courseId={data?._id.toString()}
+              price={data?.price}
+            ></LinkToErrolCourse>
+          )}
         </div>
       </div>
     </div>

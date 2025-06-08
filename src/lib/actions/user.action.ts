@@ -5,6 +5,7 @@ import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
 import Course from "@/database/course.model";
 import Lecture from "@/database/lecture.model";
+import Lesson from "@/database/lesson.model";
 
 const createUser = async (params: ICreateUser): Promise<any> => {
   if (Object.keys(params).length === 0) {
@@ -54,7 +55,7 @@ const getUserCourses = async ({ userId }: { userId: string }) => {
         match: { _destroy: false },
         populate: {
           path: "lessons",
-          model: Lecture,
+          model: Lesson,
           match: { _destroy: false },
         },
       },

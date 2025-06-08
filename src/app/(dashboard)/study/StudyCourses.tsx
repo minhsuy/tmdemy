@@ -23,7 +23,7 @@ const StudyCourses = ({ courseList }: { courseList: ICourse[] }) => {
                 lastLesson.length > 0 &&
                 lastLesson?.find((item: any) => item.course === courseItem.slug)
                   ?.url) ||
-              `/${courseItem.slug}/lesson?slug=${courseItem?.lectures[0]?.lessons[0].slug}`;
+              `/${courseItem.slug}/lesson?slug=${courseItem?.lectures[0]?.lessons[0]?.slug}`;
             return (
               <CourseItem
                 key={courseItem._id}

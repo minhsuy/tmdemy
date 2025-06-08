@@ -23,4 +23,16 @@ enum ELessonType {
   VIDEO = "VIDEO",
   TEXT = "TEXT",
 }
-export { EUserRole, EUserStatus, ECourseStatus, ECourseLevel, ELessonType };
+enum EOrderStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+export {
+  EUserRole,
+  EUserStatus,
+  ECourseStatus,
+  ECourseLevel,
+  ELessonType,
+  EOrderStatus,
+};

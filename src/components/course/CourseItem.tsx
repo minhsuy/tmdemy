@@ -65,7 +65,13 @@ const CourseItem = ({
           ))}
 
           <span className="font-bold text-primary ml-auto text-base">
-            {formatMoney(data?.price)} đ
+            {data?.price === 0 ? (
+              <span className="p-2 text-xs font-normal rounded-md text-white bg-green-500 ">
+                MIỄN PHÍ
+              </span>
+            ) : (
+              formatMoney(data?.price)
+            )}{" "}
           </span>
         </div>
 

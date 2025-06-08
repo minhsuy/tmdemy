@@ -72,7 +72,7 @@ const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
         slug: `tieu-de-bai-hoc-moi-${new Date()
           .getTime()
           .toString()
-          .slice(-3)}`,
+          .slice(-6)}`,
       });
       if (newLesson.success) {
         toast.success(newLesson.message);
@@ -115,7 +115,7 @@ const CourseUpdateContent = ({ data }: { data: ICoursePopulated }) => {
     e.stopPropagation();
     try {
       Swal.fire({
-        text: `Bạn có muốn xóa bàibài học này ?`,
+        text: `Bạn có muốn xóa bài học này ?`,
         title: "Xóa bài học",
         icon: "error",
         showCancelButton: true,

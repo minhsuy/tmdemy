@@ -9,7 +9,7 @@ import {
   IconStudy,
   IconUsers,
 } from "@/components/icons";
-import { ECourseLevel, ECourseStatus } from "@/types/enums";
+import { ECourseLevel, ECourseStatus, EOrderStatus } from "@/types/enums";
 import { ICourseInfo, IMenuItems } from "@/types/type";
 
 export const menuItems: IMenuItems[] = [
@@ -32,6 +32,12 @@ export const menuItems: IMenuItems[] = [
     icon: <IconCourse className="size-5"></IconCourse>,
   },
   {
+    id: 6,
+    url: "/manage/order",
+    title: "Quản lý đơn hàng",
+    icon: <IconOrder className="size-5"></IconOrder>,
+  },
+  {
     id: 4,
     url: "/manage/member",
     title: "Quản lý thành viên",
@@ -42,12 +48,6 @@ export const menuItems: IMenuItems[] = [
     url: "/manage/comment",
     title: "Quản lý bình luận",
     icon: <IconComment className="size-5"></IconComment>,
-  },
-  {
-    id: 6,
-    url: "/manage/order",
-    title: "Quản lý đơn hàng",
-    icon: <IconOrder className="size-5"></IconOrder>,
   },
 ];
 
@@ -104,6 +104,27 @@ export const courseStatus: {
     title: "Từ chối",
     value: ECourseStatus.REJECTED,
     className: "bg-red-500 text-white",
+  },
+];
+export const orderStatus: {
+  title: string;
+  value: EOrderStatus;
+  className?: string;
+}[] = [
+  {
+    title: "Đã duyệt",
+    value: EOrderStatus.COMPLETED,
+    className: "bg-green-500 text-white p-2 rounded-md",
+  },
+  {
+    title: "Chờ duyệt",
+    value: EOrderStatus.PENDING,
+    className: "bg-orange-500 text-white p-2 rounded-md",
+  },
+  {
+    title: "Từ chối",
+    value: EOrderStatus.CANCELLED,
+    className: "bg-red-500 text-white p-2 rounded-md",
   },
 ];
 

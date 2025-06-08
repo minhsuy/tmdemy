@@ -19,6 +19,7 @@ const page = async ({
     (await getCourses({
       search: searchParams?.search,
       page: searchParams?.page,
+      limit: 3,
     })) || [];
   if (!courses) return null;
   return (

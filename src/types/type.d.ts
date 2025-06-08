@@ -1,6 +1,6 @@
 import { ILecture, TLecture } from "./../database/lecture.model";
 import { Document } from "mongoose";
-import { EUserRole, EUserStatus } from "./enums";
+import { EOrderStatus, EUserRole, EUserStatus } from "./enums";
 import { ICourse } from "@/database/course.model";
 
 interface IActiveLink {
@@ -119,6 +119,29 @@ export interface getCourseConditionParams {
   limit?: number;
   search?: string;
   status?: string;
+}
+export interface createOrderParams {
+  code: string;
+  course: string;
+  user: string;
+  total?: number;
+  amount?: number;
+  discount?: number;
+  coupon?: string;
+}
+export interface IOrderManage {
+  code?: string;
+  amount?: number;
+  coupon?: string;
+  discount?: number;
+  total?: number;
+  status: EOrderStatus;
+  course: {
+    title: string;
+  };
+  user: {
+    name: string;
+  };
 }
 export {
   IActiveLink,
