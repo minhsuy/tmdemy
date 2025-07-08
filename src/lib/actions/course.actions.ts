@@ -66,7 +66,7 @@ const getCourses = async (params: getCourseConditionParams): Promise<any> => {
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
-    return courses;
+    return JSON.parse(JSON.stringify(courses));
   } catch (error) {
     console.log(error);
   }

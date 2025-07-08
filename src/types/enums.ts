@@ -1,7 +1,6 @@
 enum EUserRole {
   ADMIN = "ADMIN",
   USER = "USER",
-  EXPERT = "EXPERT",
 }
 enum EUserStatus {
   ACTIVE = "ACTIVE",
@@ -28,6 +27,9 @@ enum EOrderStatus {
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED",
 }
+enum ECouponType {
+  PERCENTAGE = "PERCENTAGE",
+}
 export {
   EUserRole,
   EUserStatus,
@@ -35,4 +37,5 @@ export {
   ECourseLevel,
   ELessonType,
   EOrderStatus,
+  ECouponType,
 };

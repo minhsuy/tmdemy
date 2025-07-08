@@ -5,13 +5,21 @@ import { ActiveLink } from "../common";
 import { UserButton } from "@clerk/nextjs";
 import { IMenuItem } from "@/types/type";
 import { ModeToggle } from "../common/ModeToggle";
-import { createUser } from "@/lib/actions/user.action";
+import { createUser, getUserInfo } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs/server";
 import { IconUsers } from "../icons";
 import IconUser from "../icons/IconUser";
+import { EUserRole } from "@/types/enums";
 
 const Sidebar = async () => {
   const { userId } = await auth();
+  let role = EUserRole.USER;
+
+  if (userId) {
+    const userInfo = await getUserInfo({ userId });
+    role = userInfo?.role || EUserRole.USER;
+  }
+
   return (
     <div className="hidden p-5 border-r border-r-gray-300 lg:flex flex-col dark:bg-grayDarker dark:boder dark:border-grayDarker">
       <Link className="font-bold text-3xl inline-block mb-5" href="/">
@@ -19,14 +27,18 @@ const Sidebar = async () => {
         demy
       </Link>
       <ul className="flex flex-col gap-2">
-        {menuItems &&
-          menuItems.map((item) => (
+        {menuItems
+          .filter((item) => {
+            if (!item.roles) return true;
+            return item.roles.includes(role);
+          })
+          .map((item) => (
             <MenuItem
               key={item.id}
               icon={item.icon}
               url={item.url}
               title={item.title}
-            ></MenuItem>
+            />
           ))}
       </ul>
       <div className="mt-auto flex items-center justify-between ">

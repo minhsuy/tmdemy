@@ -1,11 +1,13 @@
 "use server";
 import User from "@/database/user.model";
-import { ICreateUser } from "@/types/type";
+import { getCourseConditionParams, ICreateUser } from "@/types/type";
 import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
 import Course from "@/database/course.model";
 import Lecture from "@/database/lecture.model";
 import Lesson from "@/database/lesson.model";
+import { console } from "inspector";
+import { FilterQuery } from "mongoose";
 
 const createUser = async (params: ICreateUser): Promise<any> => {
   if (Object.keys(params).length === 0) {

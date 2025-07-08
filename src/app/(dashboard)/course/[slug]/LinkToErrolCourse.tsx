@@ -4,9 +4,10 @@ import { IUser } from "@/types/type";
 import { createOrderCode } from "@/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import CouponForm from "./CouponForm";
 const LinkToErrolCourse = ({
   user,
   courseId,
@@ -17,17 +18,25 @@ const LinkToErrolCourse = ({
   price: number;
 }) => {
   const router = useRouter();
+  const [priceAfterCoupon, setPriceAfterCoupon] = useState<number>(0);
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [couponId, setCouponId] = useState<string>("");
   const handleErrolCourse = async (price: number) => {
     if (!user) {
       toast.error("Vui lòng đăng nhập để thực hiện chức năng này !");
+      return;
     }
     const code = createOrderCode();
+    if (priceAfterCoupon > 0) {
+      price = priceAfterCoupon;
+    }
     const res = await createNewOrder({
-      user: user._id,
+      user: user?._id,
       course: courseId,
       code,
       amount: price,
       total: price,
+      coupon: couponId,
     });
     if (!res.success) {
       Swal.fire({
@@ -49,12 +58,34 @@ const LinkToErrolCourse = ({
     }
   };
   return (
-    <button
-      className="flex items-center justify-center w-full mt-10 rounded-lg text-white font-semibold bg-primary h-10"
-      onClick={() => handleErrolCourse(price)}
-    >
-      {price > 0 ? "Mua ngay" : "Nhận khóa học"}
-    </button>
+    <div>
+      {price > 0 ? (
+        <div>
+          <CouponForm
+            courseId={courseId}
+            priceAfterCoupon={priceAfterCoupon}
+            setPriceAfterCoupon={setPriceAfterCoupon}
+            price={price}
+            couponCode={couponCode}
+            setCouponCode={setCouponCode}
+            setCouponId={setCouponId}
+          ></CouponForm>
+          <button
+            className="flex items-center justify-center w-full mt-10 rounded-lg text-white font-semibold bg-primary h-10"
+            onClick={() => handleErrolCourse(price)}
+          >
+            Mua ngay
+          </button>
+        </div>
+      ) : (
+        <button
+          className="flex items-center justify-center w-full mt-10 rounded-lg text-white font-semibold bg-primary h-10"
+          onClick={() => handleErrolCourse(price)}
+        >
+          Nhận khóa học
+        </button>
+      )}
+    </div>
   );
 };
 

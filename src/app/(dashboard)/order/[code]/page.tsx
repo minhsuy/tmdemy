@@ -3,6 +3,7 @@ import Congratulation from "@/components/common/Congratulation";
 import { getOrderUser } from "@/lib/actions/order.actions";
 import { IOrderManage } from "@/types/type";
 import { formatMoney } from "@/utils";
+import { divide } from "lodash";
 import { CheckCircle } from "lucide-react";
 
 interface OrderDetailsPageRootProps {
@@ -36,6 +37,20 @@ const OrderDetailsPageRoot = async ({ params }: OrderDetailsPageRootProps) => {
               {formatMoney(order?.total as number)} VNĐ
             </strong>
           </p>
+          {order?.coupon && order?.coupon && (
+            <div className="flex flex-col gap-2">
+              <p>
+                Giảm giá :{" "}
+                <strong className="text-primary">
+                  {order?.coupon?.value}%
+                </strong>
+              </p>
+              <p className="text-gray-700">
+                Mã giảm giá:{" "}
+                <strong className="text-primary">{order?.coupon?.code}</strong>
+              </p>
+            </div>
+          )}
           {order?.total === 0 ? (
             <p className="text-gray-700">
               Bạn đã sở hữu khóa học này , hãy vào khu vực học tập để học nhé !

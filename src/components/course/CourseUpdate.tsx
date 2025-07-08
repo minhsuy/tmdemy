@@ -460,7 +460,6 @@ function CourseUpdate({ data }: { data: ICourse }) {
             disabled={isLoading}
             className="text-white w-[150px] "
             type="submit"
-            isLoading={isLoading}
           >
             Cập nhật khóa học
           </Button>

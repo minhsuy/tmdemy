@@ -49,6 +49,7 @@ function CourseAddNew({ user }: { user: IUser }) {
           slugify(values.title, {
             lower: true,
             locale: "vi",
+            remove: /[*+~.()'"!:@,]/g,
           }),
         author: user._id,
       };
@@ -108,7 +109,7 @@ function CourseAddNew({ user }: { user: IUser }) {
             disabled={isLoading}
             className="text-white w-[120px]"
             type="submit"
-            isLoading={isLoading}
+            // isLoading={isLoading}
           >
             Tạo khóa học
           </Button>

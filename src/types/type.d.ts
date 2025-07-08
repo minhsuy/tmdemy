@@ -1,3 +1,4 @@
+import { ICoupon } from "@/database/coupon.model";
 import { ILecture, TLecture } from "./../database/lecture.model";
 import { Document } from "mongoose";
 import { EOrderStatus, EUserRole, EUserStatus } from "./enums";
@@ -18,6 +19,7 @@ interface IMenuItems {
   url: string;
   title: string;
   icon?: React.ReactNode;
+  roles?: EUserRole;
 }
 interface ICourseInfo {
   title: string | number;
@@ -119,6 +121,7 @@ export interface getCourseConditionParams {
   limit?: number;
   search?: string;
   status?: string;
+  active?: boolean;
 }
 export interface createOrderParams {
   code: string;
@@ -130,9 +133,9 @@ export interface createOrderParams {
   coupon?: string;
 }
 export interface IOrderManage {
+  _id: string;
   code?: string;
   amount?: number;
-  coupon?: string;
   discount?: number;
   total?: number;
   status: EOrderStatus;
@@ -141,7 +144,44 @@ export interface IOrderManage {
   };
   user: {
     name: string;
+    _id: string;
   };
+  coupon: {
+    title: string;
+    code: string;
+    value: number;
+  };
+}
+export interface IUpdateOrder {
+  status: EOrderStatus;
+  _id: string;
+  action: EOrderStatus.COMPLETED | EOrderStatus.CANCELLED;
+  user_id?: string;
+}
+export interface ICreateCoupon {
+  title?: string;
+  code: string;
+  active?: boolean;
+  limit?: number;
+  type?: string;
+  value?: number;
+  courses?: string[];
+}
+export interface ICouponPopulated extends Omit<ICoupon, "courses"> {
+  courses: {
+    _id: string;
+    title: string;
+  }[];
+}
+export interface CouponUpdateParams {
+  title?: string;
+  code?: string;
+  active?: boolean;
+  limit?: number;
+  type?: string;
+  value?: number;
+  courses?: string[];
+  _id: string;
 }
 export {
   IActiveLink,

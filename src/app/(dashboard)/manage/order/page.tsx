@@ -15,6 +15,7 @@ const page = async ({
     search: searchParams?.search || "",
     page: Number(searchParams?.page) || 1,
     status: searchParams?.status,
+    limit: 6,
   });
   return (
     <div>

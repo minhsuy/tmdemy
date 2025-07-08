@@ -33,6 +33,10 @@ import { orderStatus } from "@/constants";
 import Heading from "../typography/Heading";
 import { debounce } from "lodash";
 import useQueryString from "@/hooks/useQueryString";
+import { EOrderStatus } from "@/types/enums";
+import { updateOrder } from "@/lib/actions/order.actions";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 const CourseManage = ({ orders }: { orders: IOrderManage[] }) => {
   const { createQueryString, pathname, router } = useQueryString();
   const handleSearchOrder = debounce((value: string) => {
@@ -50,6 +54,47 @@ const CourseManage = ({ orders }: { orders: IOrderManage[] }) => {
   }, [page]);
   const handleFilterOrder = (value: string) => {
     router.push(pathname + "?" + createQueryString("status", value));
+  };
+  const handleUpdateOrder = async (
+    action: EOrderStatus.COMPLETED | EOrderStatus.CANCELLED,
+    status: EOrderStatus,
+    _id: string
+  ) => {
+    try {
+      if (action === EOrderStatus.COMPLETED) {
+        const res = await updateOrder({
+          _id,
+          action,
+          status,
+        });
+        if (res.success) {
+          toast.success(res.message);
+        }
+      } else {
+        Swal.fire({
+          text: `Bạn có muốn hủy đơn hàng này ?`,
+          title: "Hủy đơn hàng",
+          icon: "error",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Đồng ý",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const res = await updateOrder({
+              _id,
+              action,
+              status,
+            });
+            if (res.success) {
+              toast.success(res.message);
+            }
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div>
@@ -125,10 +170,33 @@ const CourseManage = ({ orders }: { orders: IOrderManage[] }) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <button className="p-2 bg-green-500 rounded-md text-white">
+                    <button
+                      className="p-2 bg-green-500 rounded-md text-white"
+                      disabled={
+                        order.status === EOrderStatus.COMPLETED ||
+                        order.status === EOrderStatus.CANCELLED
+                      }
+                      onClick={() =>
+                        handleUpdateOrder(
+                          EOrderStatus.COMPLETED,
+                          order.status,
+                          order._id
+                        )
+                      }
+                    >
                       <IconCheck className="size-4" />
                     </button>
-                    <button className="p-2 bg-red-500 rounded-md text-white">
+                    <button
+                      className="p-2 bg-red-500 rounded-md text-white"
+                      disabled={order.status === EOrderStatus.CANCELLED}
+                      onClick={() =>
+                        handleUpdateOrder(
+                          EOrderStatus.CANCELLED,
+                          order.status,
+                          order._id
+                        )
+                      }
+                    >
                       <IconClose className="size-4" />
                     </button>
                   </div>
