@@ -169,12 +169,7 @@ function LessonItemUpdate({
           />
         </div>
         <div className="flex justify-end gap-5 items-center mt-8">
-          <Button
-            type="submit"
-            className="text-white"
-            disabled={isLoading}
-            isLoading={isLoading}
-          >
+          <Button type="submit" className="text-white" disabled={isLoading}>
             Cập nhật
           </Button>
         </div>
