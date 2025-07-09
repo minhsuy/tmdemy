@@ -1,6 +1,7 @@
 "use server";
 import {
   getCourseConditionParams,
+  ICourseDetail,
   ICoursePopulated,
   ICreateCourseParams,
   IUpdateCourse,
@@ -172,10 +173,67 @@ const deleteCourse = async (slug: string, pathname: string): Promise<any> => {
     console.log(error);
   }
 };
+const viewsCourse = async (slug: string): Promise<any> => {
+  try {
+    await connectToDatabase();
+    const course = await Course.findOne({ slug: slug });
+    if (!course) {
+      return {
+        success: false,
+        message: "Khóa học không tồn tại !",
+      };
+    }
+    await Course.findOneAndUpdate({ slug: slug }, { $inc: { views: 1 } });
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+const getDurationAndLengthOfCourse = async (
+  slug: string
+): Promise<ICourseDetail | undefined> => {
+  try {
+    await connectToDatabase();
+    const course = await Course.findOne({ slug }).populate({
+      path: "lectures",
+      model: Lecture,
+      match: { _destroy: false },
+      populate: {
+        path: "lessons",
+        model: Lesson,
+        match: { _destroy: false },
+      },
+    });
+    if (!course) {
+      return {
+        success: false,
+        duration: 0,
+        length: 0,
+      };
+    }
+    const lecture = course.lectures.map((l: any) => l.lessons).flat();
+    const duration = lecture.reduce(
+      (acc: number, cur: any) => acc + cur.duration,
+      0
+    );
+
+    return {
+      success: true,
+      duration,
+      length: lecture.length,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
 export {
   createCourse,
   getCourseBySlug,
   getCourses,
   updateCourse,
   deleteCourse,
+  viewsCourse,
+  getDurationAndLengthOfCourse,
 };

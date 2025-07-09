@@ -39,12 +39,14 @@ export const menuItems: IMenuItems[] = [
     url: "/coupon",
     title: "Săn mã giảm giá",
     icon: <IconCouponFree className="size-5" />,
+    roles: EUserRole.USER,
   },
   {
     id: 10,
     url: "/my-orders",
     title: "Đơn hàng của tôi",
     icon: <IconMyOrder className="size-5" />,
+    roles: EUserRole.USER,
   },
   {
     id: 4,

@@ -5,7 +5,11 @@ import IconCheck from "@/components/icons/IconCheck";
 import { Button } from "@/components/ui/button";
 import { courseLevel } from "@/constants";
 import { ICourse } from "@/database/course.model";
-import { getCourseBySlug } from "@/lib/actions/course.actions";
+import {
+  getCourseBySlug,
+  getDurationAndLengthOfCourse,
+  viewsCourse,
+} from "@/lib/actions/course.actions";
 import { getUserCourses, getUserInfo } from "@/lib/actions/user.action";
 import { ECourseStatus, EUserRole } from "@/types/enums";
 import { auth } from "@clerk/nextjs/server";
@@ -24,6 +28,7 @@ import LessonContent from "@/components/lesson/LessonContent";
 import { formatMoney } from "@/utils";
 import Link from "next/link";
 import LinkToErrolCourse from "./LinkToErrolCourse";
+import { formatTime } from "@/lib/utils";
 
 const page = async ({
   params,
@@ -37,6 +42,7 @@ const page = async ({
   const course = await getCourseBySlug({ slug: params.slug });
   if (!course || !course?.data) return <PageNotFound></PageNotFound>;
   const { data }: { data: ICoursePopulated } = course;
+  const courseDetail = await getDurationAndLengthOfCourse(data?.slug);
 
   if (data.status === ECourseStatus.PENDING && user?.role !== EUserRole.ADMIN)
     return <PageNotFound></PageNotFound>;
@@ -75,12 +81,14 @@ const page = async ({
         </BoxSection>
         <BoxSection title="Thông tin">
           <div className="grid grid-cols-4 gap-5 mb-10">
-            <BoxInfo title="Bài học">100</BoxInfo>
+            <BoxInfo title="Bài học">{courseDetail?.length}</BoxInfo>
             <BoxInfo title="Lượt xem">{data?.views}</BoxInfo>
             <BoxInfo title="Trình độ">
               {courseLevel?.find((level) => level.value === data?.level)?.title}
             </BoxInfo>
-            <BoxInfo title="Thời lượng">100</BoxInfo>
+            <BoxInfo title="Thời lượng">
+              {formatTime(courseDetail?.duration || 0)}
+            </BoxInfo>
           </div>
         </BoxSection>
         <BoxSection title="Nội dung khóa học">
@@ -141,7 +149,7 @@ const page = async ({
           <ul className="mb-5 flex flex-col gap-2 text-sm text-slate-700 ">
             <li className="flex items-center gap-2 ">
               <IconClock className="size-4" />
-              <span>30h học</span>
+              <span>{formatTime(courseDetail?.duration || 0)} giờ học</span>
             </li>
             <li className="flex items-center gap-2">
               <IconPlay className="size-4" />

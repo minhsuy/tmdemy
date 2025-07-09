@@ -3,7 +3,7 @@ import IconArrowLeft from "@/components/icons/IconArrowLeft";
 import IconArrowRight from "@/components/icons/IconArrowRight";
 import { Button } from "@/components/ui/button";
 import { ILesson } from "@/database/lesson.model";
-import { getCourseBySlug } from "@/lib/actions/course.actions";
+import { getCourseBySlug, viewsCourse } from "@/lib/actions/course.actions";
 import { getAllLesson, getLessonBySlug } from "@/lib/actions/lesson.actions";
 import React from "react";
 import LessonNavigation from "./LessonNavigation";
@@ -48,6 +48,7 @@ const page = async ({
     return <PageNotFound></PageNotFound>;
   const courseId = findCourse.data._id.toString();
   const { data }: { data: ICourse } = findCourse;
+
   const { slug } = searchParams;
   const lesson = await getLessonBySlug({
     slug,

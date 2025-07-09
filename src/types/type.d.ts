@@ -183,6 +183,11 @@ export interface CouponUpdateParams {
   courses?: string[];
   _id: string;
 }
+export interface ICourseDetail {
+  duration: number;
+  length: number;
+  success: boolean;
+}
 export {
   IActiveLink,
   IMenuItem,

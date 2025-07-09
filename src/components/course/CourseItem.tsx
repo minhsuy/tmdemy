@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { IconClock, IconEye, IconStar } from "../icons";
 import { formatMoney } from "@/utils";
+import { getDurationAndLengthOfCourse } from "@/lib/actions/course.actions";
+import { formatTime } from "@/lib/utils";
 
-const CourseItem = ({
+const CourseItem = async ({
   data,
   cta,
   url = "",
@@ -13,6 +15,7 @@ const CourseItem = ({
   cta?: string;
   url?: string;
 }) => {
+  const courseDetail = await getDurationAndLengthOfCourse(data?.slug);
   const courseUrl = cta ? url : `/course/${data?.slug}`;
   const courseInfo = [
     {
@@ -24,7 +27,7 @@ const CourseItem = ({
       icon: (className?: string) => <IconStar className={className}></IconStar>,
     },
     {
-      title: "30h25p",
+      title: formatTime(courseDetail?.duration || 0),
       icon: (className?: string) => (
         <IconClock className={className}></IconClock>
       ),

@@ -7,8 +7,12 @@ import React from "react";
 
 const StudyCourses = ({ courseList }: { courseList: ICourse[] }) => {
   if (!courseList) return null;
-  const lastLesson =
-    JSON.parse(localStorage?.getItem("lastLesson") || "[]") || [];
+  let lastLesson = [];
+  if (typeof localStorage !== "undefined") {
+  }
+  lastLesson = localStorage
+    ? JSON.parse(localStorage?.getItem("lastLesson") || "[]") || []
+    : [];
   return (
     <CourseGrid>
       {courseList &&
