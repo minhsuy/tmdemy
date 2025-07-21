@@ -30,6 +30,10 @@ enum EOrderStatus {
 enum ECouponType {
   PERCENTAGE = "PERCENTAGE",
 }
+enum ERatingStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
 export {
   EUserRole,
   EUserStatus,
@@ -38,4 +42,5 @@ export {
   ELessonType,
   EOrderStatus,
   ECouponType,
+  ERatingStatus,
 };

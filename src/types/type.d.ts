@@ -123,6 +123,13 @@ export interface getCourseConditionParams {
   status?: string;
   active?: boolean;
 }
+export interface IFilterData {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  active?: boolean;
+}
 export interface createOrderParams {
   code: string;
   course: string;
@@ -188,6 +195,31 @@ export interface ICourseDetail {
   length: number;
   success: boolean;
 }
+export interface ICreateRating {
+  success: boolean;
+  message: string;
+}
+export interface ICreateRatingParams {
+  course: string;
+  rate: number;
+  content: string;
+  user: string;
+}
+export interface IRatingItem {
+  _id: string;
+  rate: number;
+  content: string;
+  status: ERatingStatus;
+  course: {
+    title: string;
+    slug: string;
+  };
+  user: {
+    username: string;
+  };
+  createdAt: string;
+}
+export type TRatingIcon = "awesome" | "good" | "meh" | "bad" | "terrible";
 export {
   IActiveLink,
   IMenuItem,

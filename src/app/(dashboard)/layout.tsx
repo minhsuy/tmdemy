@@ -2,6 +2,8 @@ import { ModeToggle } from "@/components/common/ModeToggle";
 import IconUser from "@/components/icons/IconUser";
 import Sidebar, { MenuItem } from "@/components/layout/Sidebar";
 import { menuItems } from "@/constants";
+import { getUserInfo } from "@/lib/actions/user.action";
+import { EUserRole } from "@/types/enums";
 import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
@@ -9,20 +11,32 @@ import React from "react";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const { userId } = await auth();
+  let role = EUserRole.USER;
+
+  if (userId) {
+    const userInfo = await getUserInfo({ userId });
+    role = userInfo?.role || EUserRole.USER;
+  }
+
   return (
     <div className="wrapper lg:grid lg:grid-cols-[300px,minmax(0,1fr)] h-full min-h-screen relative">
       <Sidebar />
       <div className="flex lg:hidden gap-3 absolute bottom-0 items-center justify-center w-full p-3">
         <ul className="flex gap-x-2">
-          {menuItems.map((item, index) => (
-            <MenuItem
-              key={index}
-              url={item.url}
-              title={item.title}
-              icon={item.icon}
-              onlyIcon
-            ></MenuItem>
-          ))}
+          {menuItems
+            .filter((item) => {
+              if (!item.roles) return true;
+              return item.roles.includes(role);
+            })
+            .map((item, index) => (
+              <MenuItem
+                key={index}
+                url={item.url}
+                title={item.title}
+                icon={item.icon}
+                onlyIcon
+              ></MenuItem>
+            ))}
         </ul>
         <div className="flex items-center justify-center">
           {!userId ? (

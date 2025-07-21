@@ -1,5 +1,13 @@
 import PageNotFound from "@/app/not-found";
-import { IconClock, IconPlay, IconStudy, IconUsers } from "@/components/icons";
+
+import {
+  IconClock,
+  IconPlay,
+  IconStar,
+  IconStudy,
+  IconUsers,
+} from "@/components/icons";
+
 import IconAdd from "@/components/icons/IconAdd";
 import IconCheck from "@/components/icons/IconCheck";
 import { Button } from "@/components/ui/button";
@@ -28,8 +36,13 @@ import LessonContent from "@/components/lesson/LessonContent";
 import { formatMoney } from "@/utils";
 import Link from "next/link";
 import LinkToErrolCourse from "./LinkToErrolCourse";
-import { formatTime } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
+import { formatTime } from "@/lib/utils";
 const page = async ({
   params,
 }: {
@@ -41,6 +54,7 @@ const page = async ({
   const user = await getUserCourses({ userId } as any);
   const course = await getCourseBySlug({ slug: params.slug });
   if (!course || !course?.data) return <PageNotFound></PageNotFound>;
+  await viewsCourse(params.slug);
   const { data }: { data: ICoursePopulated } = course;
   const courseDetail = await getDurationAndLengthOfCourse(data?.slug);
 
@@ -50,6 +64,12 @@ const page = async ({
   const includesCourses = user?.courses?.some(
     (courseId: any) => courseId._id.toString() === data._id.toString()
   );
+  const ratings = data?.rating?.map((item: any) => ({
+    content: item.content,
+    avatar: item.user.avatar,
+    rate: item.rate,
+    username: item.user.username,
+  }));
   return (
     <div className="grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen mb-12">
       <div>
@@ -75,6 +95,53 @@ const page = async ({
             />
           )}
         </div>
+        {ratings.length > 0 && (
+          <div>
+            <h2 className="font-bold text-xl mb-5">Đánh giá khóa học</h2>
+            <div className="flex flex-wrap gap-2 mb-5">
+              {ratings.map((rating, index) => (
+                <Tooltip key={index}>
+                  <TooltipTrigger asChild>
+                    <Button className="border border-gray-300 bg-white hover:bg-gray-50 rounded-full">
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-2 font-medium"
+                      >
+                        <Image
+                          src={rating.avatar || "/rating/awesome.png"}
+                          alt="Avatar"
+                          width={24}
+                          height={24}
+                          className="rounded-full object-cover"
+                        />
+                        <div>
+                          <div className="flex items-center gap-1 text-yellow-500 text-xs">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <IconStar
+                                key={i}
+                                className={`size-3  fill-current ${
+                                  i < rating.rate
+                                    ? "text-yellow-500"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-gray-800 line-clamp-2 max-w-[200px] text-xs">
+                            {rating.content}
+                          </span>
+                        </div>
+                      </div>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="text-white">
+                    <p>{`${rating.username} - ${rating.content}`}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+          </div>
+        )}
         <h1 className="font-bold text-3xl mb-5">{data?.title}</h1>
         <BoxSection title="Mô tả">
           <div className="leading-normal">{data?.description}</div>

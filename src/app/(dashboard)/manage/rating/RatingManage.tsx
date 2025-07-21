@@ -19,11 +19,11 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { IOrder } from "@/database/order.model";
-import { IOrderManage } from "@/types/type";
+import { IOrderManage, IRatingItem } from "@/types/type";
 import { formatMoney } from "@/utils";
 import { debounce } from "lodash";
 import useQueryString from "@/hooks/useQueryString";
-import { EOrderStatus } from "@/types/enums";
+import { EOrderStatus, ERatingStatus } from "@/types/enums";
 import { updateOrder } from "@/lib/actions/order.actions";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -39,9 +39,11 @@ import IconTrash from "@/components/icons/IconTrash";
 import IconEdit from "@/components/icons/IconEdit";
 import Heading from "@/components/typography/Heading";
 import { deleteCoupon } from "@/lib/actions/coupon.action";
-const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
+import { IconStar } from "@/components/icons";
+import { deleteRating, updateRatingStatus } from "@/lib/actions/rating.action";
+const RatingManage = ({ ratings }: { ratings: IRatingItem[] | undefined }) => {
   const { createQueryString, pathname, router } = useQueryString();
-  const handleSearchCouponCode = debounce((value: string) => {
+  const handleSearchRatingContent = debounce((value: string) => {
     router.push(pathname + "?" + createQueryString("search", value));
   }, 700);
   const [page, setPage] = useState(1);
@@ -56,10 +58,15 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
   }, [page]);
   const handleFilterCoupon = (value: string) => {
     if (value === "ACTIVE")
-      router.push(pathname + "?" + createQueryString("active", "true"));
-    else router.push(pathname + "?" + createQueryString("active", "false"));
+      router.push(
+        pathname + "?" + createQueryString("status", ERatingStatus.ACTIVE)
+      );
+    else
+      router.push(
+        pathname + "?" + createQueryString("status", ERatingStatus.INACTIVE)
+      );
   };
-  const handleDeleteCoupon = async (code: string) => {
+  const handleDeleteRating = async (id: string) => {
     try {
       Swal.fire({
         text: `Bạn có muốn xóa coupon này ?`,
@@ -71,10 +78,26 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
         confirmButtonText: "Đồng ý",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await deleteCoupon(code, "/manage/coupon");
-          toast.success("Coupon đã được xóa !");
+          const res = await deleteRating({ id });
+          if (res && res?.success) {
+            toast.success(res.message);
+          } else {
+            toast.error(res?.message || "Something went wrong");
+          }
         }
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleUpdateRating = async (id: string) => {
+    try {
+      const res = await updateRatingStatus({ id });
+      if (res && res?.success) {
+        toast.success(res.message);
+      } else {
+        toast.error(res?.message || "Something went wrong");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -88,11 +111,11 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
         <IconAdd className="size-6"></IconAdd>
       </Link>
       <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-24 mr-2">
-        <Heading>Quản lý coupon</Heading>
+        <Heading>Quản lý đánh giá</Heading>
         <div className="w-[300px]">
           <Input
-            placeholder="Tìm kiếm theo mã coupon..."
-            onChange={(e) => handleSearchCouponCode(e.target.value)}
+            placeholder="Tìm kiếm đánh giá..."
+            onChange={(e) => handleSearchRatingContent(e.target.value)}
           />
         </div>
         <Select onValueChange={(value) => handleFilterCoupon(value)}>
@@ -113,27 +136,58 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Mã</TableHead>
             <TableHead>Tiêu đề</TableHead>
-            <TableHead>Giảm giá</TableHead>
-            <TableHead>Sử dụng</TableHead>
+            <TableHead>Khóa học</TableHead>
+            <TableHead>Thành viên</TableHead>
             <TableHead>Trạng thái</TableHead>
             <TableHead>Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {coupons &&
-            coupons.length > 0 &&
-            coupons.map((coupon: ICoupon) => (
-              <TableRow key={coupon._id} className="font-medium">
-                <TableCell className="font-bold">{coupon.code}</TableCell>
-                <TableCell>{coupon.title}</TableCell>
-                <TableCell>{coupon.value}%</TableCell>
+          {ratings &&
+            ratings.length > 0 &&
+            ratings.map((rating: IRatingItem) => (
+              <TableRow key={rating._id} className="font-medium">
                 <TableCell>
-                  {coupon.used} / {coupon.limit}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <div>
+                        <div className="flex items-center gap-1 text-yellow-500 text-xs">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <IconStar
+                              key={i}
+                              className={`size-3  fill-current ${
+                                i < rating.rate
+                                  ? "text-yellow-500"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className=" line-clamp-2 max-w-[200px] text-sm">
+                          {rating.content}
+                        </span>
+                      </div>
+                    </div>
+                    <time>
+                      {new Date(rating.createdAt).toLocaleDateString("vi-Vi")}
+                    </time>
+                  </div>
                 </TableCell>
                 <TableCell>
-                  {coupon.active ? (
+                  <Link
+                    href={`/course/${rating.course.slug}`}
+                    className="font-semibold hover:text-primary text-gray-800"
+                    target="_blank"
+                  >
+                    {rating.course.title}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <strong>{rating.user.username}</strong>
+                </TableCell>
+                <TableCell>
+                  {rating.status === ERatingStatus.ACTIVE ? (
                     <span className="bg-green-500 p-2 text-white rounded-md">
                       ACTIVE
                     </span>
@@ -145,15 +199,24 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <Link
-                      className="p-2 bg-green-500 rounded-md text-white"
-                      href={`/manage/coupon/update?code=${coupon.code}`}
+                    <button
+                      className={cn(
+                        "p-2 rounded-md text-white",
+                        rating.status === ERatingStatus.ACTIVE
+                          ? "bg-red-500"
+                          : "bg-green-500"
+                      )}
+                      onClick={() => handleUpdateRating(rating._id)}
                     >
-                      <IconEdit className="size-4" />
-                    </Link>
+                      {rating.status === ERatingStatus.ACTIVE ? (
+                        <IconClose className="size-4" />
+                      ) : (
+                        <IconCheck className="size-4" />
+                      )}
+                    </button>
                     <button
                       className="p-2 bg-red-500 rounded-md text-white"
-                      onClick={() => handleDeleteCoupon(coupon.code)}
+                      onClick={() => handleDeleteRating(rating._id)}
                     >
                       <IconTrash className="size-4" />
                     </button>
@@ -181,4 +244,4 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
   );
 };
 
-export default CouponManage;
+export default RatingManage;

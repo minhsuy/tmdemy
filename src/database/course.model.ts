@@ -14,7 +14,7 @@ export interface ICourse extends Document {
   author: Schema.Types.ObjectId;
   level: ECourseLevel;
   views: number;
-  rating: number[];
+  rating: Schema.Types.ObjectId[];
   createdAt?: string;
   info: {
     requirements: string[];
@@ -78,8 +78,8 @@ const courseSchema = new mongoose.Schema<ICourse>(
       },
     ],
     rating: {
-      type: [Number],
-      default: [5],
+      type: [Schema.Types.ObjectId],
+      ref: "Rating",
     },
     views: {
       type: Number,

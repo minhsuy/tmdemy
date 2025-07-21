@@ -19,7 +19,7 @@ import {
   EOrderStatus,
   EUserRole,
 } from "@/types/enums";
-import { ICourseInfo, IMenuItems } from "@/types/type";
+import { ICourseInfo, IMenuItems, TRatingIcon } from "@/types/type";
 
 export const menuItems: IMenuItems[] = [
   {
@@ -67,6 +67,13 @@ export const menuItems: IMenuItems[] = [
     url: "/manage/coupon",
     title: "Quản lý coupon",
     icon: <IconCoupon className="size-5" />,
+    roles: EUserRole.ADMIN,
+  },
+  {
+    id: 9,
+    url: "/manage/rating",
+    title: "Quản lý đánh giá",
+    icon: <IconStar className="size-5" />,
     roles: EUserRole.ADMIN,
   },
   {
@@ -178,3 +185,29 @@ export const couponStatus: { value: string; title: string }[] = [
   },
 ];
 export const lessonSaveKey = "lastLesson";
+
+export const ratingList: {
+  title: TRatingIcon;
+  value: number;
+}[] = [
+  {
+    title: "terrible",
+    value: 1,
+  },
+  {
+    title: "bad",
+    value: 2,
+  },
+  {
+    title: "meh",
+    value: 3,
+  },
+  {
+    title: "good",
+    value: 4,
+  },
+  {
+    title: "awesome",
+    value: 5,
+  },
+];

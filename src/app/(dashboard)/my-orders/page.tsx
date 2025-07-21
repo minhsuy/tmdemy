@@ -12,7 +12,7 @@ const page = async () => {
   const orders = await getMyOrder({ userId: user._id } as any);
   if (!orders) return null;
   return (
-    <div>
+    <div className="mb-10">
       <Heading>Đơn hàng của tôi</Heading>
       <MyOrder orders={orders}></MyOrder>
     </div>

@@ -20,7 +20,7 @@ const LessonContent = ({
   getHistories?: IHistory[];
 }) => {
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col mb-10">
       {data?.lectures?.map((lecture: any) => (
         <Accordion
           type="single"

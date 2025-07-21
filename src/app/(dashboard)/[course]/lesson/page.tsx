@@ -22,6 +22,7 @@ import { getUserInfo } from "@/lib/actions/user.action";
 import { EUserRole } from "@/types/enums";
 import { getHistory } from "@/lib/actions/history.action";
 import LessonSaveUrl from "./LessonSaveUrl";
+import RatingButton from "./RatingButton";
 
 const page = async ({
   params,
@@ -93,7 +94,8 @@ const page = async ({
             prevLesson={prevLesson?.slug}
             nextLesson={nextLesson?.slug}
           ></LessonNavigation>
-          <div></div>
+
+          <RatingButton data={{ courseId, userId: user._id }}></RatingButton>
         </div>
         <Heading className="my-10">{lessonDetail.title}</Heading>
         <div className="p-5 rounded-lg bgDarkMode border border-gray-300 entry-content">

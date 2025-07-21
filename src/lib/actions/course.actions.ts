@@ -10,10 +10,12 @@ import { connectToDatabase } from "../mongoose";
 import { NextResponse } from "next/server";
 import Course, { ICourse } from "@/database/course.model";
 import { revalidatePath } from "next/cache";
-import { ECourseStatus } from "@/types/enums";
+import { ECourseStatus, ERatingStatus } from "@/types/enums";
 import Lecture from "@/database/lecture.model";
 import Lesson from "@/database/lesson.model";
 import { FilterQuery } from "mongoose";
+import Rating from "@/database/rating.model";
+import User from "@/database/user.model";
 
 const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   if (!slug) {
@@ -21,16 +23,28 @@ const getCourseBySlug = async ({ slug }: { slug: string }): Promise<any> => {
   }
   try {
     await connectToDatabase();
-    const findCourse = await Course.findOne({ slug }).populate({
-      path: "lectures",
-      model: Lecture,
-      match: { _destroy: false },
-      populate: {
-        path: "lessons",
-        model: Lesson,
+    const findCourse = await Course.findOne({ slug })
+      .populate({
+        path: "lectures",
+        model: Lecture,
         match: { _destroy: false },
-      },
-    });
+        populate: {
+          path: "lessons",
+          model: Lesson,
+          match: { _destroy: false },
+        },
+      })
+      .populate({
+        path: "rating",
+        model: Rating,
+        match: { status: ERatingStatus.ACTIVE },
+        select: "rate content user",
+        populate: {
+          path: "user",
+          model: User,
+          select: "avatar username",
+        },
+      });
     return {
       success: true,
       data: JSON.parse(JSON.stringify(findCourse)),
