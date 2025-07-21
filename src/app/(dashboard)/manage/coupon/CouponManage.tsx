@@ -23,11 +23,11 @@ import { IOrderManage } from "@/types/type";
 import { formatMoney } from "@/utils";
 import { debounce } from "lodash";
 import useQueryString from "@/hooks/useQueryString";
-import { EOrderStatus } from "@/types/enums";
+import { ECouponType, EOrderStatus } from "@/types/enums";
 import { updateOrder } from "@/lib/actions/order.actions";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { couponStatus, orderStatus } from "@/constants";
+import { allItem, couponStatus, orderStatus } from "@/constants";
 import IconCheck from "@/components/icons/IconCheck";
 import IconClose from "@/components/icons/IconClose";
 import IconArrowLeft from "@/components/icons/IconArrowLeft";
@@ -57,7 +57,9 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
   const handleFilterCoupon = (value: string) => {
     if (value === "ACTIVE")
       router.push(pathname + "?" + createQueryString("active", "true"));
-    else router.push(pathname + "?" + createQueryString("active", "false"));
+    else if (value === "INACTIVE")
+      router.push(pathname + "?" + createQueryString("active", "false"));
+    else router.push(pathname);
   };
   const handleDeleteCoupon = async (code: string) => {
     try {
@@ -100,6 +102,9 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
             <SelectValue placeholder="Trạng thái" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value={allItem} key={allItem}>
+              {"Tất cả"}
+            </SelectItem>
             {couponStatus &&
               couponStatus.length > 0 &&
               couponStatus.map((status) => (
@@ -163,7 +168,7 @@ const CouponManage = ({ coupons }: { coupons: ICoupon[] }) => {
             ))}
         </TableBody>
       </Table>
-      <div className="flex justify-end gap-3 mt-5">
+      <div className="flex justify-end gap-3 mt-5 mb-16">
         <button
           className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100"
           onClick={() => handleChangePage("prev")}

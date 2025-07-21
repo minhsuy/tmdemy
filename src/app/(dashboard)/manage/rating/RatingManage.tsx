@@ -27,7 +27,7 @@ import { EOrderStatus, ERatingStatus } from "@/types/enums";
 import { updateOrder } from "@/lib/actions/order.actions";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { couponStatus, orderStatus } from "@/constants";
+import { allItem, couponStatus, orderStatus } from "@/constants";
 import IconCheck from "@/components/icons/IconCheck";
 import IconClose from "@/components/icons/IconClose";
 import IconArrowLeft from "@/components/icons/IconArrowLeft";
@@ -61,10 +61,13 @@ const RatingManage = ({ ratings }: { ratings: IRatingItem[] | undefined }) => {
       router.push(
         pathname + "?" + createQueryString("status", ERatingStatus.ACTIVE)
       );
-    else
+    else if (value === "INACTIVE")
       router.push(
         pathname + "?" + createQueryString("status", ERatingStatus.INACTIVE)
       );
+    else {
+      router.push(pathname);
+    }
   };
   const handleDeleteRating = async (id: string) => {
     try {
@@ -123,6 +126,9 @@ const RatingManage = ({ ratings }: { ratings: IRatingItem[] | undefined }) => {
             <SelectValue placeholder="Trạng thái" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value={allItem} key={allItem}>
+              {"Tất cả"}
+            </SelectItem>
             {couponStatus &&
               couponStatus.length > 0 &&
               couponStatus.map((status) => (
@@ -226,7 +232,7 @@ const RatingManage = ({ ratings }: { ratings: IRatingItem[] | undefined }) => {
             ))}
         </TableBody>
       </Table>
-      <div className="flex justify-end gap-3 mt-5">
+      <div className="flex justify-end gap-3 mb-16">
         <button
           className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100"
           onClick={() => handleChangePage("prev")}

@@ -33,20 +33,32 @@ const page = async ({
   };
   searchParams: {
     slug: string;
+    isDemo: string;
   };
 }) => {
+  const { isDemo } = searchParams;
   const { course } = params;
+
   const findCourse = await getCourseBySlug({ slug: course });
-  if (!findCourse.data) return <PageNotFound></PageNotFound>;
+  if (!findCourse.data) return <PageNotFound />;
+
   const { userId } = await auth();
-  if (!userId) return <PageNotFound></PageNotFound>;
-  const user = await getUserInfo({ userId });
-  if (!user) return <PageNotFound></PageNotFound>;
+  if (!userId && !isDemo) return <PageNotFound />;
+
+  let user = null;
+  if (userId) {
+    user = await getUserInfo({ userId });
+  }
+
+  if (!user && !isDemo) return <PageNotFound />;
+
   if (
+    user &&
     !user.courses.includes(findCourse.data._id.toString()) &&
     user.role !== EUserRole.ADMIN
-  )
-    return <PageNotFound></PageNotFound>;
+  ) {
+    return <PageNotFound />;
+  }
   const courseId = findCourse.data._id.toString();
   const { data }: { data: ICourse } = findCourse;
 
@@ -73,6 +85,7 @@ const page = async ({
     ((getHistories?.length as number) / lessonList.length) * 100;
   const url = new URL(lessonDetail.video_url);
   const videoId = url.searchParams.get("v");
+  // console.log(lessonDetail); // CURRENT LESSON
   return (
     <div className="grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start">
       <div>
@@ -88,37 +101,57 @@ const page = async ({
             src={`https://www.youtube.com/embed/${videoId}`}
           ></iframe>
         </div>
-        <div className="flex items-center justify-between">
-          <LessonNavigation
-            course={course}
-            prevLesson={prevLesson?.slug}
-            nextLesson={nextLesson?.slug}
-          ></LessonNavigation>
+        {!isDemo && (
+          <>
+            <div className="flex items-center justify-between">
+              <LessonNavigation
+                course={course}
+                prevLesson={prevLesson?.slug}
+                nextLesson={nextLesson?.slug}
+              ></LessonNavigation>
 
-          <RatingButton data={{ courseId, userId: user._id }}></RatingButton>
-        </div>
+              {user && (
+                <RatingButton
+                  data={{ courseId, userId: user._id }}
+                ></RatingButton>
+              )}
+            </div>
+          </>
+        )}
         <Heading className="my-10">{lessonDetail.title}</Heading>
-        <div className="p-5 rounded-lg bgDarkMode border border-gray-300 entry-content">
-          <div
-            dangerouslySetInnerHTML={{ __html: lessonDetail.content || "" }}
-          ></div>
-        </div>
+        {!isDemo && (
+          <>
+            {lessonDetail.content && (
+              <div className="p-5 rounded-lg bgDarkMode border border-gray-300 entry-content">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: lessonDetail.content || "",
+                  }}
+                ></div>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
-      <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
-        <div className="h-3 w-full rounded-full border border-gray-300 mb-2 ">
-          <div
-            className="h-full w-0 rounded-full transition-all duration-300 bg-primary"
-            style={{ width: `${percentage}%` }}
-          ></div>
-        </div>
-        <LessonContent
-          getHistories={getHistories}
-          data={data}
-          course={course}
-          slug={slug}
-        ></LessonContent>
-      </div>
+      {!isDemo && (
+        <>
+          <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
+            <div className="h-3 w-full rounded-full border border-gray-300 mb-2 ">
+              <div
+                className="h-full w-0 rounded-full transition-all duration-300 bg-primary"
+                style={{ width: `${percentage}%` }}
+              ></div>
+            </div>
+            <LessonContent
+              getHistories={getHistories}
+              data={data}
+              course={course}
+              slug={slug}
+            ></LessonContent>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import CouponManage from "./ManageCoupon";
+import CouponManage from "./CouponManage";
 import { getCoupons } from "@/lib/actions/coupon.action";
 import { BooleanExpressionOperator } from "mongoose";
 import { boolean } from "zod";

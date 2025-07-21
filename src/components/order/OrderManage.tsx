@@ -29,7 +29,7 @@ import { IOrderManage } from "@/types/type";
 import { formatMoney } from "@/utils";
 import IconCheck from "../icons/IconCheck";
 import IconClose from "../icons/IconClose";
-import { orderStatus } from "@/constants";
+import { allItem, orderStatus } from "@/constants";
 import Heading from "../typography/Heading";
 import { debounce } from "lodash";
 import useQueryString from "@/hooks/useQueryString";
@@ -53,7 +53,8 @@ const CourseManage = ({ orders }: { orders: IOrderManage[] }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const handleFilterOrder = (value: string) => {
-    router.push(pathname + "?" + createQueryString("status", value));
+    if (value === allItem) router.push(pathname);
+    else router.push(pathname + "?" + createQueryString("status", value));
   };
   const handleUpdateOrder = async (
     action: EOrderStatus.COMPLETED | EOrderStatus.CANCELLED,
@@ -111,6 +112,9 @@ const CourseManage = ({ orders }: { orders: IOrderManage[] }) => {
             <SelectValue placeholder="Trạng thái" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value={allItem} key={allItem}>
+              {"Tất cả"}
+            </SelectItem>
             {orderStatus &&
               orderStatus.length > 0 &&
               orderStatus.map((status) => (
@@ -205,7 +209,7 @@ const CourseManage = ({ orders }: { orders: IOrderManage[] }) => {
             ))}
         </TableBody>
       </Table>
-      <div className="flex justify-end gap-3 mt-5">
+      <div className="flex justify-end gap-3 mt-5 mb-16">
         <button
           className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100"
           onClick={() => handleChangePage("prev")}

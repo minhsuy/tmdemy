@@ -93,6 +93,7 @@ interface ICreateLessonParams {
   _destroy?: boolean;
   path?: string;
   _id?: string;
+  isDemo?: boolean;
 }
 interface IUpdateLessonParams {
   _id: string;

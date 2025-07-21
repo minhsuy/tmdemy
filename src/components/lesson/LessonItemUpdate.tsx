@@ -22,6 +22,8 @@ import Link from "next/link";
 import { updateLesson } from "@/lib/actions/lesson.actions";
 import { Editor } from "@tinymce/tinymce-react";
 import { ICreateLessonParams } from "@/types/type";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 const formSchema = z.object({
   title: z.string().min(5, {
     message: "Tên bài học phải có ít nhất 5 ký tự",
@@ -30,6 +32,7 @@ const formSchema = z.object({
   video_url: z.string().optional(),
   content: z.string().optional(),
   duration: z.number().optional(),
+  isDemo: z.boolean().optional(),
 });
 
 function LessonItemUpdate({
@@ -39,7 +42,6 @@ function LessonItemUpdate({
   lesson: ICreateLessonParams;
   path: string;
 }) {
-  console.log(lesson);
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,10 +51,12 @@ function LessonItemUpdate({
       video_url: lesson.video_url,
       content: lesson.content,
       duration: lesson.duration,
+      isDemo: lesson.isDemo,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (values.isDemo === undefined) values.isDemo = false;
     setIsLoading(true);
     try {
       const updatedLesson = await updateLesson({
@@ -144,6 +148,26 @@ function LessonItemUpdate({
             )}
           />
           {/* content  */}
+          {/* isDemo  */}
+          <FormField
+            control={form.control}
+            name="isDemo"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>Học thử</FormLabel>
+                </div>
+                <FormControl>
+                  <Switch
+                    className="border-gray-200"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          {/* isDemo  */}
           <FormField
             control={form.control}
             name="content"

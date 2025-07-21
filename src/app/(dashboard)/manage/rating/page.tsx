@@ -15,6 +15,7 @@ const page = async ({
   const ratings = await getRatings({
     search: searchParams?.search || "",
     status: searchParams?.status,
+    page: Number(searchParams?.page) || 1,
   });
   return (
     <div>

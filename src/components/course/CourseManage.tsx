@@ -14,7 +14,7 @@ import { IconEye, IconStudy } from "../icons";
 import Link from "next/link";
 import IconTrash from "../icons/IconTrash";
 import IconEdit from "../icons/IconEdit";
-import { courseStatus } from "@/constants";
+import { allItem, courseStatus } from "@/constants";
 import Heading from "../typography/Heading";
 import { cn } from "@/lib/utils";
 import { ICourse } from "@/database/course.model";
@@ -142,7 +142,8 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
     router.push(pathname + "?" + createQueryString("search", value));
   }, 700);
   const handleGetStatusCourse = (value: string) => {
-    router.push(pathname + "?" + createQueryString("status", value));
+    if (value === allItem) router.push(pathname);
+    else router.push(pathname + "?" + createQueryString("status", value));
   };
   const [page, setPage] = useState(1);
   const handleChangePage = (action: "next" | "prev") => {
@@ -175,6 +176,10 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
             <SelectValue placeholder="Trạng thái" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value={allItem} key={allItem}>
+              {"Tất cả"}
+            </SelectItem>
+
             {courseStatus &&
               courseStatus.length > 0 &&
               courseStatus.map((status) => (
@@ -286,7 +291,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
             ))}
         </TableBody>
       </Table>
-      <div className="flex justify-end gap-3 mt-5">
+      <div className="flex justify-end gap-3 mt-5 mb-16">
         <button
           className="p-2  rounded-md hover dark:text-black  hover:text-white hover:bg-primary dark:hover:text-white dark:hover:bg-primary bg-slate-100"
           onClick={() => handleChangePage("prev")}

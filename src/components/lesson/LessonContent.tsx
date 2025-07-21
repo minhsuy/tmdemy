@@ -13,11 +13,13 @@ const LessonContent = ({
   course,
   slug,
   getHistories = [],
+  courseSlug,
 }: {
   data: any;
   course?: string;
   slug?: string;
   getHistories?: IHistory[];
+  courseSlug?: string;
 }) => {
   return (
     <div className="flex flex-col mb-10">
@@ -36,18 +38,26 @@ const LessonContent = ({
             </AccordionTrigger>
             <AccordionContent className="!bg-transparent border-none p-0">
               <div className="flex flex-col gap-3">
-                {lecture.lessons.map((lesson: any) => (
-                  <LessonItem
-                    url={course ? `/${course}/lesson?slug=${lesson.slug}` : ""}
-                    key={lesson._id}
-                    lesson={lesson}
-                    isActive={lesson.slug === slug}
-                    isChecked={getHistories.some(
-                      (history) =>
-                        history.lesson.toString() === lesson._id.toString()
-                    )}
-                  ></LessonItem>
-                ))}
+                {lecture.lessons.map((lesson: any) => {
+                  const isDemo = lesson.isDemo
+                    ? `/${courseSlug}/lesson?slug=${lesson.slug}&isDemo=true`
+                    : "";
+                  return (
+                    <LessonItem
+                      url={
+                        course ? `/${course}/lesson?slug=${lesson.slug}` : ""
+                      }
+                      isDemo={isDemo}
+                      key={lesson._id}
+                      lesson={lesson}
+                      isActive={lesson.slug === slug}
+                      isChecked={getHistories.some(
+                        (history) =>
+                          history.lesson.toString() === lesson._id.toString()
+                      )}
+                    ></LessonItem>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>

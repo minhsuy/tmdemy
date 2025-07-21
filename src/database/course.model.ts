@@ -85,6 +85,7 @@ const courseSchema = new mongoose.Schema<ICourse>(
       type: Number,
       default: 0,
     },
+
     info: {
       requirements: {
         type: [String],

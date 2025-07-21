@@ -13,6 +13,7 @@ export interface ILesson extends Document {
   content: string;
   type: ELessonType;
   _destroy: boolean;
+  isDemo: boolean;
 }
 
 const lessonSchema = new mongoose.Schema<ILesson>(
@@ -50,6 +51,10 @@ const lessonSchema = new mongoose.Schema<ILesson>(
     course: {
       type: Schema.Types.ObjectId,
       ref: "Course",
+    },
+    isDemo: {
+      type: Boolean,
+      default: false,
     },
     type: {
       type: String,

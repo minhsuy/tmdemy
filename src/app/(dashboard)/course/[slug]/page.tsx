@@ -159,7 +159,7 @@ const page = async ({
           </div>
         </BoxSection>
         <BoxSection title="Nội dung khóa học">
-          <LessonContent data={data}></LessonContent>
+          <LessonContent data={data} courseSlug={params.slug}></LessonContent>
         </BoxSection>
         <BoxSection title="Yêu cầu">
           {data &&

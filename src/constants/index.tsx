@@ -155,17 +155,17 @@ export const orderStatus: {
   {
     title: "Đã duyệt",
     value: EOrderStatus.COMPLETED,
-    className: "bg-green-500 text-white p-2 rounded-md",
+    className: "bg-green-500 p-2 rounded-md text-white  whitespace-nowrap",
   },
   {
     title: "Chờ duyệt",
     value: EOrderStatus.PENDING,
-    className: "bg-orange-500 text-white p-2 rounded-md",
+    className: "bg-orange-500 text-white p-2 rounded-md  whitespace-nowrap",
   },
   {
     title: "Từ chối",
     value: EOrderStatus.CANCELLED,
-    className: "bg-red-500 text-white p-2 rounded-md",
+    className: "bg-red-500 text-white p-2 rounded-md  whitespace-nowrap",
   },
 ];
 export const couponTypes: { value: string; title: string }[] = [
@@ -211,3 +211,4 @@ export const ratingList: {
     value: 5,
   },
 ];
+export const allItem = "all";

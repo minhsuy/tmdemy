@@ -12,11 +12,13 @@ const LessonItem = ({
   url,
   isActive,
   isChecked = false,
+  isDemo = "",
 }: {
   lesson: ILesson;
   url?: string;
   isActive?: boolean;
   isChecked?: boolean;
+  isDemo?: string;
 }) => {
   const handleCreateHistory = async (checked: boolean | string) => {
     try {
@@ -53,9 +55,18 @@ const LessonItem = ({
           {lesson.title}
         </h4>
       )}
+
       <span className="ml-auto text-xs font-semibold flex-shrink-0">
         {lesson.duration} phút
       </span>
+      {isDemo && !url && (
+        <Link
+          className="font-semibold bg-primary rounded-full text-white p-2 text-xs"
+          href={isDemo}
+        >
+          Học thử
+        </Link>
+      )}
     </div>
   );
 };
