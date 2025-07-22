@@ -49,9 +49,7 @@ const page = async ({
   if (userId) {
     user = await getUserInfo({ userId });
   }
-
   if (!user && !isDemo) return <PageNotFound />;
-
   if (
     user &&
     !user.courses.includes(findCourse.data._id.toString()) &&
@@ -67,6 +65,9 @@ const page = async ({
     slug,
     course: courseId,
   });
+  if (isDemo && !lesson.data.isDemo) {
+    return <PageNotFound></PageNotFound>;
+  }
   const getAllLessons = await getAllLesson({ course: courseId });
   if (!getAllLessons && !getAllLessons.data)
     return <PageNotFound></PageNotFound>;

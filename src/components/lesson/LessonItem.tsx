@@ -61,7 +61,7 @@ const LessonItem = ({
       </span>
       {isDemo && !url && (
         <Link
-          className="font-semibold bg-primary rounded-full text-white p-2 text-xs"
+          className="font-semibold bg-primary rounded-full text-white p-2 text-xs  whitespace-nowrap"
           href={isDemo}
         >
           Học thử
