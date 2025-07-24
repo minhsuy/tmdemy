@@ -63,6 +63,7 @@ const LessonItem = ({
         <Link
           className="font-semibold bg-primary rounded-full text-white p-2 text-xs  whitespace-nowrap"
           href={isDemo}
+          target="_blank"
         >
           Học thử
         </Link>

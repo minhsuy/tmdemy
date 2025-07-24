@@ -3,6 +3,7 @@ import { ILecture, TLecture } from "./../database/lecture.model";
 import { Document } from "mongoose";
 import { EOrderStatus, EUserRole, EUserStatus } from "./enums";
 import { ICourse } from "@/database/course.model";
+import { IComment } from "@/database/comment.model";
 
 interface IActiveLink {
   url: string;
@@ -219,6 +220,21 @@ export interface IRatingItem {
     username: string;
   };
   createdAt: string;
+}
+export interface ICreateComment {
+  user?: string;
+  lesson?: string;
+  course?: string;
+  content?: string;
+  path?: string;
+  slug?: string;
+}
+export interface ICommentItem extends Omit<IComment, "user"> {
+  user: {
+    username: string;
+    avatar: string;
+    _id: string;
+  };
 }
 export type TRatingIcon = "awesome" | "good" | "meh" | "bad" | "terrible";
 export {

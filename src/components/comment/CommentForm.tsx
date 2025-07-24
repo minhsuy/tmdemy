@@ -1,0 +1,94 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "../ui/textarea";
+import { useTransition } from "react";
+import { set } from "lodash";
+import { ICreateComment } from "@/types/type";
+import { createNewComment } from "@/lib/actions/comment.action";
+import { toast } from "react-toastify";
+
+const formSchema = z.object({
+  content: z
+    .string({
+      message: "Nội dung không được để trống !",
+    })
+    .min(5, {
+      message: "Bình luận phải có ít nhất 5 ký tự !",
+    }),
+});
+
+export function CommentForm({ data }: { data: ICreateComment }) {
+  const [isPending, startTransition] = useTransition();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(async () => {
+      const res = await createNewComment({
+        ...data,
+        content: values.content,
+        path: `${data.course}/lesson?slug=${data.slug}`,
+      });
+      if (res && !res?.success) {
+        toast.error(res.message);
+        form.setValue("content", "");
+      } else {
+        toast.success(res?.message);
+        form.setValue("content", "");
+      }
+    });
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 flex flex-col"
+      >
+        <FormField
+          control={form.control}
+          name="content"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea
+                  placeholder="Nhập bình luận ..."
+                  {...field}
+                  className="resize-none h-[120px]  text-sm font-semibold text-gray-700 focus:border-primary focus:ring-0"
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          className="text-white ml-auto w-[150px]"
+          isLoading={isPending}
+        >
+          Đăng bình luận
+        </Button>
+      </form>
+    </Form>
+  );
+}

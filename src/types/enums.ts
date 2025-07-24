@@ -34,7 +34,13 @@ enum ERatingStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
 }
+enum ECommentStatus {
+  ACTIVE = "ACTIVE",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
+}
 export {
+  ECommentStatus,
   EUserRole,
   EUserStatus,
   ECourseStatus,

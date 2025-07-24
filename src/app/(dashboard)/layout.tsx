@@ -21,8 +21,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="wrapper lg:grid lg:grid-cols-[300px,minmax(0,1fr)] h-full min-h-screen relative">
       <Sidebar />
-      <div className="flex lg:hidden gap-3 absolute bottom-0 items-center justify-center w-full p-3">
-        <ul className="flex gap-x-2">
+      <div className="flex items-center justify-center lg:hidden gap-x-2 bottom-0  w-full p-3  h-16 z-50 fixed bg-gray-200 rounded-md dark:bg-grayDarker">
+        <ul className="flex bottom-0 left-0 w-full gap-2">
           {menuItems
             .filter((item) => {
               if (!item.roles) return true;
@@ -38,7 +38,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
               ></MenuItem>
             ))}
         </ul>
-        <div className="flex items-center justify-center">
+        <div className="fixed bottom-[10px] right-0">
           {!userId ? (
             <Link href={"/sign-in"}>
               <div className="flex items-center gap-2 bg-primary text-white rounded-md p-2">

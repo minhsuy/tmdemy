@@ -59,9 +59,11 @@ const RatingButton = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <div className="flex items-center gap-x-3 bg-primary text-white rounded-lg p-3 cursor-pointer group">
-            <IconStar className="size-4 hover  group-hover:animate-spin"></IconStar>
-            <span className="text-white text-sm ">Đánh giá khóa học</span>
+          <div className="flex items-center gap-x-3 border border-cyan-500 bg-gradient-to-r from-cyan-500/80 to-sky-400/80 text-white p-3 cursor-pointer group rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out backdrop-blur-sm">
+            <IconStar className="size-4 group-hover:animate-spin text-yellow-300 drop-shadow-md" />
+            <span className="text-sm font-semibold tracking-wide drop-shadow">
+              Đánh giá khóa học
+            </span>
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-white">

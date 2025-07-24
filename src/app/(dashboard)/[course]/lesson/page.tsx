@@ -23,6 +23,8 @@ import { EUserRole } from "@/types/enums";
 import { getHistory } from "@/lib/actions/history.action";
 import LessonSaveUrl from "./LessonSaveUrl";
 import RatingButton from "./RatingButton";
+import LessonComment from "./LessonComment";
+import { getCommentByLesson } from "@/lib/actions/comment.action";
 
 const page = async ({
   params,
@@ -50,24 +52,26 @@ const page = async ({
     user = await getUserInfo({ userId });
   }
   if (!user && !isDemo) return <PageNotFound />;
-  if (
-    user &&
-    !user.courses.includes(findCourse.data._id.toString()) &&
-    user.role !== EUserRole.ADMIN
-  ) {
-    return <PageNotFound />;
-  }
   const courseId = findCourse.data._id.toString();
   const { data }: { data: ICourse } = findCourse;
-
   const { slug } = searchParams;
   const lesson = await getLessonBySlug({
     slug,
     course: courseId,
   });
-  if (isDemo && !lesson.data.isDemo) {
-    return <PageNotFound></PageNotFound>;
+  if (isDemo) {
+    if (!lesson.data || !lesson.data.isDemo)
+      return <PageNotFound></PageNotFound>;
+  } else {
+    if (
+      user &&
+      !user.courses.includes(findCourse.data._id.toString()) &&
+      user.role !== EUserRole.ADMIN
+    ) {
+      return <PageNotFound />;
+    }
   }
+
   const getAllLessons = await getAllLesson({ course: courseId });
   if (!getAllLessons && !getAllLessons.data)
     return <PageNotFound></PageNotFound>;
@@ -87,6 +91,10 @@ const page = async ({
   const url = new URL(lessonDetail.video_url);
   const videoId = url.searchParams.get("v");
   // console.log(lessonDetail); // CURRENT LESSON
+  const comments = await getCommentByLesson({
+    lesson: lessonDetail._id.toString(),
+    course: courseId,
+  });
   return (
     <div className="grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start">
       <div>
@@ -131,6 +139,16 @@ const page = async ({
                 ></div>
               </div>
             )}
+            {/* comment */}
+            <LessonComment
+              data={{
+                course: courseId,
+                lesson: lessonDetail._id,
+                user: user._id,
+                slug: slug,
+              }}
+              comments={comments}
+            ></LessonComment>
           </>
         )}
       </div>
