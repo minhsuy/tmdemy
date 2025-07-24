@@ -21,7 +21,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="wrapper lg:grid lg:grid-cols-[300px,minmax(0,1fr)] h-full min-h-screen relative">
       <Sidebar />
-      <div className="flex items-center justify-center lg:hidden gap-x-2 bottom-0  w-full p-3  h-16 z-50 fixed bg-gray-200 rounded-md dark:bg-grayDarker">
+      <div className="flex items-center justify-center lg:hidden gap-x-2 bottom-0  w-full p-3  h-16 z-50 fixed bg-gray-100 rounded-md dark:bg-grayDarker">
         <ul className="flex bottom-0 left-0 w-full gap-2">
           {menuItems
             .filter((item) => {
