@@ -38,7 +38,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
               ></MenuItem>
             ))}
         </ul>
-        <div className="fixed bottom-[10px] right-0">
+        <div className=" bottom-[10px] right-0">
           {!userId ? (
             <Link href={"/sign-in"}>
               <div className="flex items-center gap-2 bg-primary text-white rounded-md p-2">

@@ -228,6 +228,8 @@ export interface ICreateComment {
   content?: string;
   path?: string;
   slug?: string;
+  parentId?: string;
+  level?: number | any;
 }
 export interface ICommentItem extends Omit<IComment, "user"> {
   user: {

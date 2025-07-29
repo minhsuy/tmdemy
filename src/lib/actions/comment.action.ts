@@ -28,7 +28,7 @@ const createNewComment = async (
 };
 const getCommentByLesson = async (
   params: ICreateComment
-): Promise<ICommentItem[] | undefined | null> => {
+): Promise<ICommentItem[] | undefined> => {
   try {
     connectToDatabase();
     const comment = await Comment.find({
@@ -40,7 +40,7 @@ const getCommentByLesson = async (
       model: User,
       select: "username avatar ",
     });
-    if (!comment) return null;
+    if (!comment) return undefined;
     return JSON.parse(JSON.stringify(comment));
   } catch (error) {
     console.log(error);
@@ -54,18 +54,40 @@ const deleteCommentByUser = async ({
   path: string;
 }): Promise<ICreateRating | undefined> => {
   try {
-    connectToDatabase();
-    const deleteComment = await Comment.findByIdAndDelete(id);
-    if (!deleteComment)
+    await connectToDatabase();
+    const comment = await Comment.findById(id);
+    if (!comment)
       return {
         success: false,
         message: "Không thể xóa bình luận !",
       };
-    revalidatePath(path || "/");
-    return {
-      success: true,
-      message: "Xóa bình luận thành công !",
-    };
+    if (comment.parentId) {
+      const deleteComment = await Comment.findByIdAndDelete(id);
+      if (!deleteComment)
+        return {
+          success: false,
+          message: "Không thể xóa bình luận !",
+        };
+      revalidatePath(path || "/");
+      return {
+        success: true,
+        message: "Xóa bình luận thành công !",
+      };
+    } else {
+      await Comment.deleteMany({ parentId: id });
+      const deleteComment = await Comment.findByIdAndDelete(id);
+      if (!deleteComment) {
+        return {
+          success: false,
+          message: "Không thể xóa bình luận!",
+        };
+      }
+      revalidatePath(path || "/");
+      return {
+        success: true,
+        message: "Xóa bình luận thành công !",
+      };
+    }
   } catch (error) {
     console.log(error);
   }

@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { useTransition } from "react";
 import { set } from "lodash";
-import { ICreateComment } from "@/types/type";
+import { ICommentItem, ICreateComment } from "@/types/type";
 import { createNewComment } from "@/lib/actions/comment.action";
 import { toast } from "react-toastify";
 
@@ -32,7 +32,17 @@ const formSchema = z.object({
     }),
 });
 
-export function CommentForm({ data }: { data: ICreateComment }) {
+export function CommentForm({
+  data,
+  comment,
+  replyComment,
+  setReplyComment,
+}: {
+  data: ICreateComment;
+  comment?: ICreateComment;
+  replyComment?: boolean;
+  setReplyComment?: React.Dispatch<React.SetStateAction<boolean>> | any;
+}) {
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,6 +52,13 @@ export function CommentForm({ data }: { data: ICreateComment }) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    if (data.parentId) {
+      data = {
+        ...data,
+        parentId: data.parentId,
+        level: data.parentId && data?.level >= 0 ? data?.level + 1 : 0,
+      };
+    }
     startTransition(async () => {
       const res = await createNewComment({
         ...data,
@@ -51,9 +68,15 @@ export function CommentForm({ data }: { data: ICreateComment }) {
       if (res && !res?.success) {
         toast.error(res.message);
         form.setValue("content", "");
+        if (replyComment) {
+          setReplyComment(false);
+        }
       } else {
         toast.success(res?.message);
         form.setValue("content", "");
+        if (replyComment) {
+          setReplyComment(false);
+        }
       }
     });
   }

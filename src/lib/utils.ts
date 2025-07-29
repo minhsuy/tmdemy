@@ -1,4 +1,6 @@
+import { ICommentItem } from "@/types/type";
 import { clsx, type ClassValue } from "clsx";
+import { comment } from "postcss";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -46,4 +48,16 @@ export const timeAgo = (data: string) => {
   }
   const years = Math.round(months / 12);
   return `${years} năm`;
+};
+export const getRepliesComment = ({
+  comments,
+  parentId,
+}: {
+  comments: ICommentItem[] | undefined;
+  parentId: string;
+}) => {
+  return comments?.filter(
+    (comment: ICommentItem) =>
+      comment?.parentId?.toString() === parentId.toString()
+  );
 };

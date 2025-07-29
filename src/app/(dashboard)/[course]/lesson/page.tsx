@@ -131,7 +131,7 @@ const page = async ({
         {!isDemo && (
           <>
             {lessonDetail.content && (
-              <div className="p-5 rounded-lg bgDarkMode border border-gray-300 entry-content">
+              <div className="p-5 rounded-lg bgDarkMode border border-gray-300 entry-content mb-5">
                 <div
                   dangerouslySetInnerHTML={{
                     __html: lessonDetail.content || "",

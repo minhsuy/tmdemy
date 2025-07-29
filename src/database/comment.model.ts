@@ -8,6 +8,8 @@ export interface IComment extends Document {
   lesson: Schema.Types.ObjectId;
   status: ECommentStatus;
   createdAt: string;
+  parentId: Schema.Types.ObjectId;
+  level: number;
 }
 const commentSchema = new mongoose.Schema<IComment>(
   {
@@ -31,6 +33,14 @@ const commentSchema = new mongoose.Schema<IComment>(
       type: String,
       enum: Object.values(ECommentStatus),
       default: ECommentStatus.ACTIVE,
+    },
+    parentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+    level: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }
