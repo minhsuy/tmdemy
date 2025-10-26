@@ -8,7 +8,7 @@ import { getUserCourses } from "@/lib/actions/user.action";
 import { ECourseStatus, EUserRole } from "@/types/enums";
 import { auth } from "@clerk/nextjs/server";
 import React from "react";
-import StudyCourses from "./StudyCourses";
+import StudyDashboard from "@/components/study/StudyDashboard";
 
 const page = async () => {
   const { userId } = await auth();
@@ -20,9 +20,9 @@ const page = async () => {
   return (
     <div>
       <Heading>Khu vực học tập</Heading>
-      <StudyCourses
+      <StudyDashboard
         courseList={courseList ? JSON.parse(JSON.stringify(courseList)) : []}
-      ></StudyCourses>
+      />
     </div>
   );
 };

@@ -24,6 +24,9 @@ import { Editor } from "@tinymce/tinymce-react";
 import { ICreateLessonParams } from "@/types/type";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import QuizManager from "@/components/quiz/QuizManager";
+import CodeExerciseManager from "@/components/code/CodeExerciseManager";
 const formSchema = z.object({
   title: z.string().min(5, {
     message: "Tên bài học phải có ít nhất 5 ký tự",
@@ -78,9 +81,17 @@ function LessonItemUpdate({
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
-        <div className="grid grid-cols-2 gap-4 mt-10">
+    <Tabs defaultValue="content" className="w-full">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="content">Nội dung bài học</TabsTrigger>
+        <TabsTrigger value="quiz">Quiz</TabsTrigger>
+        <TabsTrigger value="code">Code Exercise</TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="content">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
+            <div className="grid grid-cols-2 gap-4 mt-10">
           {/* title */}
           <FormField
             control={form.control}
@@ -192,13 +203,29 @@ function LessonItemUpdate({
             )}
           />
         </div>
-        <div className="flex justify-end gap-5 items-center mt-8">
-          <Button type="submit" className="text-white" disabled={isLoading}>
-            Cập nhật
-          </Button>
-        </div>
-      </form>
-    </Form>
+            <div className="flex justify-end gap-5 items-center mt-8">
+              <Button type="submit" className="text-white" disabled={isLoading}>
+                Cập nhật
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </TabsContent>
+      
+      <TabsContent value="quiz">
+        <QuizManager 
+          lessonId={lesson._id!} 
+          courseId={lesson.course} 
+        />
+      </TabsContent>
+      
+      <TabsContent value="code">
+        <CodeExerciseManager 
+          lessonId={lesson._id!} 
+          courseId={lesson.course} 
+        />
+      </TabsContent>
+    </Tabs>
   );
 }
 export default LessonItemUpdate;

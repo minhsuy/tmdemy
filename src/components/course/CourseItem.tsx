@@ -2,7 +2,7 @@
 import { ICourse } from "@/database/course.model";
 import Image from "next/image";
 import Link from "next/link";
-import { IconClock, IconEye, IconStar } from "../icons";
+import { IconClock, IconEye, IconStar } from "@/components/icons";
 import { formatMoney } from "@/utils";
 import { getDurationAndLengthOfCourse } from "@/lib/actions/course.actions";
 import { formatTime } from "@/lib/utils";

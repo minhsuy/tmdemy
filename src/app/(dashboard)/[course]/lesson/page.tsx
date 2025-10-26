@@ -25,6 +25,8 @@ import LessonSaveUrl from "./LessonSaveUrl";
 import RatingButton from "./RatingButton";
 import LessonComment from "./LessonComment";
 import { getCommentByLesson } from "@/lib/actions/comment.action";
+import QuizList from "@/components/quiz/QuizList";
+import CodeExerciseList from "@/components/code/CodeExerciseList";
 
 const page = async ({
   params,
@@ -139,6 +141,23 @@ const page = async ({
                 ></div>
               </div>
             )}
+            
+            {/* Quiz Section */}
+            <div className="mb-8">
+              <QuizList 
+                lessonId={lessonDetail._id} 
+                courseSlug={course}
+              />
+            </div>
+            
+            {/* Code Exercise Section */}
+            <div className="mb-8">
+              <CodeExerciseList 
+                lessonId={lessonDetail._id} 
+                courseSlug={course}
+              />
+            </div>
+            
             {/* comment */}
             <LessonComment
               data={{

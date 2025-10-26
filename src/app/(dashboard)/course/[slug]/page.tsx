@@ -19,6 +19,7 @@ import {
   viewsCourse,
 } from "@/lib/actions/course.actions";
 import { getUserCourses, getUserInfo } from "@/lib/actions/user.action";
+import { formatTime } from "@/lib/utils";
 import { ECourseStatus, EUserRole } from "@/types/enums";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
@@ -42,7 +43,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { formatTime } from "@/lib/utils";
+import CourseProgress from "@/components/certificate/CourseProgress";
 const page = async ({
   params,
 }: {
@@ -95,6 +96,16 @@ const page = async ({
             />
           )}
         </div>
+        {/* Course Progress & Certificate */}
+        {includesCourses && user?.role !== EUserRole.ADMIN && (
+          <div className="mb-8">
+            <CourseProgress 
+              courseId={data?._id.toString()} 
+              courseTitle={data?.title || ""} 
+            />
+          </div>
+        )}
+        
         {ratings.length > 0 && (
           <div>
             <h2 className="font-bold text-xl mb-5">Đánh giá khóa học</h2>

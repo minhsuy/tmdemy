@@ -211,4 +211,43 @@ const getMyOrder = async ({ userId }: { userId: string }) => {
     console.log(error);
   }
 };
-export { createNewOrder, getOrders, getOrderUser, updateOrder, getMyOrder };
+
+const getOrderForPayment = async ({ code }: { code: string }) => {
+  try {
+    await connectToDatabase();
+    const order = await Order.findOne({ code })
+      .populate({
+        path: "course",
+        model: "Course",
+        select: "title image slug",
+      })
+      .populate({
+        path: "user",
+        model: "User",
+        select: "name email",
+      });
+    
+    if (!order) {
+      return {
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: "Lấy thông tin đơn hàng thành công",
+      data: JSON.parse(JSON.stringify(order)),
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: "Có lỗi xảy ra khi lấy thông tin đơn hàng",
+      data: null,
+    };
+  }
+};
+
+export { createNewOrder, getOrders, getOrderUser, updateOrder, getMyOrder, getOrderForPayment };

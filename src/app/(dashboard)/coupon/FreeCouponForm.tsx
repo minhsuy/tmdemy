@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import Heading from "@/components/typography/Heading";
 import React, { useState } from "react";
 import { getCoupons } from "@/lib/actions/coupon.action";

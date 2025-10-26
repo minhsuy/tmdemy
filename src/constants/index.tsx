@@ -8,6 +8,7 @@ import {
   IconStar,
   IconStudy,
   IconUsers,
+  IconCertificate,
 } from "@/components/icons";
 import IconCoupon from "@/components/icons/IconCoupon";
 import IconCouponFree from "@/components/icons/IconCouponFree";
@@ -39,6 +40,13 @@ export const menuItems: IMenuItems[] = [
     url: "/coupon",
     title: "Săn mã giảm giá",
     icon: <IconCouponFree className="size-5" />,
+    roles: EUserRole.USER,
+  },
+  {
+    id: 11,
+    url: "/my-certificates",
+    title: "Chứng chỉ của tôi",
+    icon: <IconCertificate className="size-5" />,
     roles: EUserRole.USER,
   },
   {

@@ -39,7 +39,8 @@ const getCommentByLesson = async (
       path: "user",
       model: User,
       select: "username avatar ",
-    });
+
+    }).sort({ createdAt: -1 });
     if (!comment) return undefined;
     return JSON.parse(JSON.stringify(comment));
   } catch (error) {

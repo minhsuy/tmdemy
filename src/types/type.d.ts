@@ -239,6 +239,203 @@ export interface ICommentItem extends Omit<IComment, "user"> {
   };
 }
 export type TRatingIcon = "awesome" | "good" | "meh" | "bad" | "terrible";
+
+// Quiz interfaces
+interface ICreateQuizParams {
+  title: string;
+  description?: string;
+  course: string;
+  lesson: string;
+  timeLimit?: number;
+  maxAttempts?: number;
+  passingScore?: number;
+}
+
+interface IUpdateQuizParams {
+  _id: string;
+  updatedData: {
+    title?: string;
+    description?: string;
+    timeLimit?: number;
+    maxAttempts?: number;
+    passingScore?: number;
+    status?: string;
+    _destroy?: boolean;
+  };
+}
+
+interface ICreateQuestionParams {
+  question: string;
+  type: string;
+  options: string[];
+  correctAnswer: number;
+  explanation?: string;
+  points?: number;
+  order?: number;
+  quiz: string;
+}
+
+interface IUpdateQuestionParams {
+  _id: string;
+  updatedData: {
+    question?: string;
+    type?: string;
+    options?: string[];
+    correctAnswer?: number;
+    explanation?: string;
+    points?: number;
+    order?: number;
+    _destroy?: boolean;
+  };
+}
+
+interface IQuizWithQuestions {
+  _id: string;
+  title: string;
+  description: string;
+  timeLimit: number;
+  maxAttempts: number;
+  passingScore: number;
+  status: string;
+  questions: ICreateQuestionParams[];
+  course: string;
+  lesson: string;
+}
+
+interface IQuizAttempt {
+  quizId: string;
+  answers: {
+    questionId: string;
+    selectedAnswer: number;
+  }[];
+  timeSpent: number;
+}
+
+// Code Exercise interfaces
+interface ICreateCodeExerciseParams {
+  title: string;
+  description: string;
+  instructions: string;
+  starterCode: string;
+  solution: string;
+  testCases: Array<{
+    input: string;
+    expectedOutput: string;
+    description: string;
+  }>;
+  language: string;
+  difficulty: string;
+  timeLimit: number;
+  maxAttempts: number;
+  points: number;
+  course: string;
+  lesson: string;
+  order?: number;
+  status?: string;
+}
+
+interface IUpdateCodeExerciseParams {
+  id: string;
+  title?: string;
+  description?: string;
+  instructions?: string;
+  starterCode?: string;
+  solution?: string;
+  testCases?: Array<{
+    input: string;
+    expectedOutput: string;
+    description: string;
+  }>;
+  language?: string;
+  difficulty?: string;
+  timeLimit?: number;
+  maxAttempts?: number;
+  points?: number;
+  order?: number;
+  status?: string;
+}
+
+interface ICodeExerciseWithResults {
+  _id: string;
+  title: string;
+  description: string;
+  instructions: string;
+  starterCode: string;
+  solution: string;
+  testCases: Array<{
+    input: string;
+    expectedOutput: string;
+    description: string;
+  }>;
+  language: string;
+  difficulty: string;
+  timeLimit: number;
+  maxAttempts: number;
+  points: number;
+  course: string;
+  lesson: string;
+  order: number;
+  status: string;
+  results?: ICodeExerciseResult[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ICodeExerciseResult {
+  _id: string;
+  codeExercise: string;
+  user: string;
+  code: string;
+  language: string;
+  testResults: Array<{
+    testCase: number;
+    passed: boolean;
+    input: string;
+    expectedOutput: string;
+    actualOutput: string;
+    error?: string;
+  }>;
+  score: number;
+  totalTests: number;
+  passedTests: number;
+  executionTime: number;
+  attempts: number;
+  completedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Certificate interfaces
+interface ICreateCertificateParams {
+  userId: string;
+  courseId: string;
+  completionPercentage: number;
+}
+
+interface ICertificateWithDetails {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  course: {
+    _id: string;
+    title: string;
+    image: string;
+    author: {
+      _id: string;
+      name: string;
+    };
+  };
+  certificateId: string;
+  issuedAt: string;
+  completionPercentage: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export {
   IActiveLink,
   IMenuItem,
@@ -254,4 +451,16 @@ export {
   ICoursePopulated,
   ICreateLessonParams,
   IUpdateLessonParams,
+  ICreateQuizParams,
+  IUpdateQuizParams,
+  ICreateQuestionParams,
+  IUpdateQuestionParams,
+  IQuizWithQuestions,
+  IQuizAttempt,
+  ICreateCodeExerciseParams,
+  IUpdateCodeExerciseParams,
+  ICodeExerciseWithResults,
+  ICodeExerciseResult,
+  ICreateCertificateParams,
+  ICertificateWithDetails,
 };

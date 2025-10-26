@@ -3,23 +3,37 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
+        protocol: 'https',
+        hostname: 'utfs.io',
+        port: '',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "plus.unsplash.com",
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+        port: '',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "utfs.io",
+        protocol: 'https',
+        hostname: 'images.clerk.dev',
+        port: '',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "img.clerk.com", // ← thêm dòng này
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
-  },
+  }
 };
 
 export default nextConfig;
